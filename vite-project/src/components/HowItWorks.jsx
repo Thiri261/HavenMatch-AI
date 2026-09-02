@@ -71,33 +71,19 @@ function HomeCard({ home }) {
   )
 }
 
-function YangonSkyline() {
-  return (
-    <svg className="yangon-skyline" viewBox="0 0 1200 160" preserveAspectRatio="none" aria-hidden="true">
-      <g fill="currentColor">
-        <path d="M0 138h58V98h18v40h38V88h12V62h8V38h6V10h7v28h6v24h8v26h13v50h50V96h13V55h8V28h7v27h8v41h14v42h64v-28h17v28h73v-45h18v45h79v-31h15v31h68v-55h9V54h7V31h6v23h8v29h10v55h47v-37h12v-30h8v30h13v37h72v-43h16V72h8v23h17v43h52v-28h19v28h43v-52h67v52h73v22H0Z" />
-        <path d="M1000 98h102l18 40H974l26-40Zm14-35h66l20 30h-100l14-30Zm8 8h17v14h-17V71Zm25 0h17v14h-17V71Z" />
-        <circle cx="45" cy="103" r="28" /><circle cx="82" cy="112" r="22" /><circle cx="1150" cy="105" r="30" /><circle cx="1185" cy="113" r="20" />
-      </g>
-    </svg>
-  )
-}
-
 function HowItWorks() {
   return (
     <section className="discover-section" id="how-it-works">
       <div className="container">
         <h2 className="section-heading">How it works</h2>
         <div className="process-grid">
-          {steps.map((step, index) => (
+          {steps.map((step) => (
             <div className="process-item" key={step.title}>
               <article className="process-card">
-                <span className="process-number">{index + 1}</span>
                 <div className="process-icon"><StepIcon name={step.icon} /></div>
                 <h3>{step.title}</h3>
                 <p>{step.description}</p>
               </article>
-              {index < steps.length - 1 && <span className="process-arrow" aria-hidden="true">→</span>}
             </div>
           ))}
         </div>
@@ -114,7 +100,6 @@ function HowItWorks() {
       </div>
 
       <aside className="ready-banner">
-        <YangonSkyline />
         <div className="ready-content">
           <h2>Ready to find a home that fits?</h2>
           <a className="button button-primary" href="#matching">Start as guest</a>

@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: havenmatch-ai-fullstack
+    runtime: docker
+    plan: free
+    dockerfilePath: ./vite-project/Dockerfile
+    dockerContext: ./vite-project
+    healthCheckPath: /api/health
+    autoDeployTrigger: commit
+    envVars:
+      - key: SWIPL_PATH
+        value: /usr/bin/swipl

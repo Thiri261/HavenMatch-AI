@@ -1,17 +1,23 @@
 /* global process, Buffer */
 import { createServer } from 'node:http'
+import { execFile } from 'node:child_process'
 import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
-import { dirname, join } from 'node:path'
+import { dirname, extname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { getProperties, matchProperties } from './matching.js'
 
 const scrypt = promisify(scryptCallback)
+const execFileAsync = promisify(execFile)
 const port = Number(process.env.PORT || 3001)
-const dataFile = join(dirname(fileURLToPath(import.meta.url)), 'data', 'users.json')
+const serverDirectory = dirname(fileURLToPath(import.meta.url))
+const dataFile = process.env.USER_DATA_FILE || join(serverDirectory, 'data', 'users.json')
+const distDirectory = join(serverDirectory, '..', 'dist')
 const sessions = new Map()
 const attempts = new Map()
+const prologExecutable = process.env.SWIPL_PATH || (process.platform === 'win32' ? 'swipl.exe' : 'swipl')
+let prologHealth = { status: 'checking', executable: prologExecutable }
 const strongPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,128}$/
 
 async function getUsers() {
@@ -54,6 +60,47 @@ function respond(response, status, body, headers = {}) {
   response.end(JSON.stringify(body))
 }
 
+const contentTypes = {
+  '.css': 'text/css; charset=utf-8',
+  '.html': 'text/html; charset=utf-8',
+  '.ico': 'image/x-icon',
+  '.jpg': 'image/jpeg',
+  '.jpeg': 'image/jpeg',
+  '.js': 'text/javascript; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.webp': 'image/webp',
+}
+
+async function serveFrontend(request, response, pathname) {
+  if (!['GET', 'HEAD'].includes(request.method)) return false
+
+  let decodedPath
+  try { decodedPath = decodeURIComponent(pathname) } catch { return false }
+  const relativePath = decodedPath.replace(/^\/+/, '') || 'index.html'
+  const requestedFile = resolve(distDirectory, relativePath)
+  if (requestedFile !== distDirectory && !requestedFile.startsWith(`${distDirectory}${sep}`)) return false
+
+  let file = requestedFile
+  let contents
+  try {
+    contents = await readFile(file)
+  } catch (error) {
+    if (error.code !== 'ENOENT' && error.code !== 'EISDIR') throw error
+    if (extname(relativePath)) return false
+    file = join(distDirectory, 'index.html')
+    contents = await readFile(file)
+  }
+
+  response.writeHead(200, {
+    'Content-Type': contentTypes[extname(file).toLowerCase()] || 'application/octet-stream',
+    'Cache-Control': file.endsWith('index.html') ? 'no-cache' : 'public, max-age=31536000, immutable',
+  })
+  response.end(request.method === 'HEAD' ? undefined : contents)
+  return true
+}
+
 async function body(request) {
   let raw = ''
   for await (const chunk of request) {
@@ -89,6 +136,10 @@ const server = createServer(async (request, response) => {
       return response.end()
     }
 
+    if (request.method === 'GET' && url.pathname === '/api/health') {
+      return respond(response, 200, { status: 'ok', service: 'havenmatch-api', prolog: prologHealth })
+    }
+
     if (request.method === 'GET' && url.pathname === '/api/properties') {
       const properties = await getProperties()
       const listingType = url.searchParams.get('listingType')
@@ -107,6 +158,11 @@ const server = createServer(async (request, response) => {
       const input = await body(request)
       const result = await matchProperties(input)
       return respond(response, 200, result)
+    }
+
+    if (!url.pathname.startsWith('/api/')) {
+      if (await serveFrontend(request, response, url.pathname)) return
+      return respond(response, 404, { message: 'Not found.' })
     }
 
     if (!url.pathname.startsWith('/api/auth/')) return respond(response, 404, { message: 'Not found.' })
@@ -157,4 +213,7 @@ const server = createServer(async (request, response) => {
 })
 
 setInterval(() => { for (const [token, session] of sessions) if (session.expiresAt < Date.now()) sessions.delete(token) }, 3_600_000).unref()
-server.listen(port, () => console.log(`HavenMatch API running at http://localhost:${port}`))
+execFileAsync(prologExecutable, ['--version'])
+  .then(({ stdout, stderr }) => { prologHealth = { status: 'available', executable: prologExecutable, version: (stdout || stderr).trim() } })
+  .catch((error) => { prologHealth = { status: 'unavailable', executable: prologExecutable, message: error.message } })
+server.listen(port, '0.0.0.0', () => console.log(`HavenMatch full-stack server running on port ${port}`))

@@ -14,6 +14,10 @@ export default function UnifiedMatchingPage() {
   const updateDetail = (key, value) => setDetails((current) => ({ ...current, [key]: value }))
   const setFacilityPriority = (facility, priority) => setDetails((current) => ({ ...current, facilities: { ...(Array.isArray(current.facilities) ? {} : current.facilities), [facility]: priority } }))
 
+  const savePreferencesForMatching = () => {
+    localStorage.setItem('havenmatch-unified-preferences', JSON.stringify({ purpose, township, budget, beds, propertyType, details }))
+  }
+
   const applyNaturalSearch = (event) => {
     event.preventDefault()
     const query = aiQuery.toLowerCase()
@@ -96,7 +100,7 @@ export default function UnifiedMatchingPage() {
                 {['Reliable electricity', 'Generator / backup power', 'Reliable water', 'Wi-Fi / internet', 'Air conditioning', 'Parking', 'Pets allowed', 'Near shops or markets'].map((facility) => <label key={facility}><span>{facility}</span><select value={(Array.isArray(details.facilities) ? '' : details.facilities[facility]) || ''} onChange={(event) => setFacilityPriority(facility, event.target.value)}><option value="">Doesn’t matter</option><option>Prefer</option><option>Must have</option></select></label>)}
               </div></details>}
               <div className="preference-review-action">
-                <a href="#review">Review my answers</a>
+                <a href="#review" onClick={savePreferencesForMatching}>Review my answers</a>
               </div>
             </aside>
 

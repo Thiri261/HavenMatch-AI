@@ -85,3 +85,14 @@ npm run build
 When `SWIPL_PATH` is configured, `npm test` also runs the real SWI-Prolog integration test. Without SWI-Prolog, only that one test is skipped and the Node fallback remains available.
 
 Property records in `server/data/properties.json` preserve their source URL and are marked `unverified`; current availability must be confirmed with the listing agent.
+
+## Full-stack Render deployment
+
+The repository includes a Docker deployment that builds the Vite frontend, installs SWI-Prolog, and runs the Node API and frontend from one Render web service.
+
+1. In Render, create a new Blueprint and connect this GitHub repository.
+2. Render reads the root `render.yaml` and builds `vite-project/Dockerfile`.
+3. After deployment, open `/api/health` and confirm it reports `"status":"ok"` and `"prolog":{"status":"available"}`.
+4. Submit a matching request in the website and confirm the `/api/match` response contains `"engine":"prolog"`.
+
+The free Render filesystem is ephemeral. Accounts stored in `server/data/users.json` can reset after a restart or redeploy. Use a managed database or a paid persistent disk before treating the authentication store as production data.

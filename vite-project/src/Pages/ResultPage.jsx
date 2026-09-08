@@ -1,6 +1,6 @@
 export default function ResultPage() {
   // AI Matched Property List (၆ ခု ပါဝင်ပါသည်)
-  const properties = [
+  const fallbackProperties = [
     {
       id: 1,
       title: "Cozy Haven Modern Apartment",
@@ -57,6 +57,22 @@ export default function ResultPage() {
     }
   ];
 
+  const stored = (() => {
+    try { return JSON.parse(localStorage.getItem('havenmatch-match-results') || 'null') } catch { return null }
+  })()
+  const hasApiResult = stored && Array.isArray(stored.matches)
+  const properties = hasApiResult
+    ? stored.matches.map((item) => ({
+        id: item.id,
+        title: item.title,
+        location: `${item.township.replaceAll('_', ' ')} Township, Yangon`,
+        price: `${new Intl.NumberFormat('en-US').format(item.priceMmk)} MMK`,
+        score: item.scoreStatus === 'not_scored' ? 'Not Scored' : `${item.score}%`,
+        image: item.imageUrl,
+        tags: item.explanations?.map((explanation) => explanation.text) || item.reasons.map((reason) => reason.replaceAll('_', ' ')),
+      }))
+    : fallbackProperties
+
   return (
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '40px 20px', fontFamily: 'sans-serif' }}>
       
@@ -76,6 +92,11 @@ export default function ResultPage() {
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
+        {hasApiResult && properties.length === 0 && (
+          <div style={{ gridColumn: '1 / -1', padding: '36px', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', color: '#475569' }}>
+            No properties meet every required preference. Try increasing the budget or relaxing one requirement.
+          </div>
+        )}
         {properties.map((item) => (
           <div key={item.id} style={{
             backgroundColor: '#ffffff',

@@ -5,6 +5,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
+import { getProperties, matchProperties } from './matching.js'
 
 const scrypt = promisify(scryptCallback)
 const port = Number(process.env.PORT || 3001)
@@ -42,7 +43,14 @@ function cookies(request) {
 }
 
 function respond(response, status, body, headers = {}) {
-  response.writeHead(status, { 'Content-Type': 'application/json', 'Cache-Control': 'no-store', ...headers })
+  response.writeHead(status, {
+    'Content-Type': 'application/json',
+    'Cache-Control': 'no-store',
+    'Access-Control-Allow-Origin': process.env.FRONTEND_ORIGIN || '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    ...headers,
+  })
   response.end(JSON.stringify(body))
 }
 
@@ -50,9 +58,19 @@ async function body(request) {
   let raw = ''
   for await (const chunk of request) {
     raw += chunk
-    if (raw.length > 20_000) throw new Error('Request too large')
+    if (raw.length > 20_000) {
+      const error = new Error('Request body is too large.')
+      error.statusCode = 413
+      throw error
+    }
   }
-  return JSON.parse(raw || '{}')
+  try {
+    return JSON.parse(raw || '{}')
+  } catch {
+    const error = new Error('Request body must contain valid JSON.')
+    error.statusCode = 400
+    throw error
+  }
 }
 
 function publicUser(user) { return { id: user.id, name: user.name, email: user.email } }
@@ -61,6 +79,36 @@ function sessionCookie(token, maxAge = 60 * 60 * 24 * 7) { return `havenmatch_se
 const server = createServer(async (request, response) => {
   try {
     const url = new URL(request.url, `http://${request.headers.host}`)
+
+    if (request.method === 'OPTIONS' && url.pathname.startsWith('/api/')) {
+      response.writeHead(204, {
+        'Access-Control-Allow-Origin': process.env.FRONTEND_ORIGIN || '*',
+        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      })
+      return response.end()
+    }
+
+    if (request.method === 'GET' && url.pathname === '/api/properties') {
+      const properties = await getProperties()
+      const listingType = url.searchParams.get('listingType')
+      const township = url.searchParams.get('township')
+      const filtered = properties.filter((property) => (!listingType || property.listingType === listingType) && (!township || property.township === township))
+      return respond(response, 200, { properties: filtered })
+    }
+
+    if (request.method === 'GET' && url.pathname.startsWith('/api/properties/')) {
+      const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length))
+      const property = (await getProperties()).find((item) => item.id === id)
+      return property ? respond(response, 200, { property }) : respond(response, 404, { message: 'Property not found.' })
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/match') {
+      const input = await body(request)
+      const result = await matchProperties(input)
+      return respond(response, 200, result)
+    }
+
     if (!url.pathname.startsWith('/api/auth/')) return respond(response, 404, { message: 'Not found.' })
 
     if (request.method === 'GET' && url.pathname === '/api/auth/session') {
@@ -101,8 +149,10 @@ const server = createServer(async (request, response) => {
     const token = randomBytes(32).toString('hex')
     sessions.set(token, { user: publicUser(user), expiresAt: Date.now() + 604_800_000 })
     return respond(response, 200, { user: publicUser(user) }, { 'Set-Cookie': sessionCookie(token) })
-  } catch {
-    return respond(response, 500, { message: 'Something went wrong. Please try again.' })
+  } catch (error) {
+    const status = Number(error.statusCode) || 500
+    const message = status < 500 ? error.message : 'Something went wrong. Please try again.'
+    return respond(response, status, { message })
   }
 })
 

@@ -1,16 +1,87 @@
-# React + Vite
+# HavenMatch AI application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This folder contains the fixed React/Vite frontend and the HavenMatch Node.js + SWI-Prolog backend.
 
-Currently, two official plugins are available:
+## Windows setup
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Install Node.js and SWI-Prolog, then run these commands from this folder:
 
-## React Compiler
+```cmd
+npm install
+set "SWIPL_PATH=C:\Program Files\swipl\bin\swipl.exe"
+npm run dev
+```
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Open `http://localhost:5173`. The API listens on `http://localhost:3001`.
 
-## Expanding the ESLint configuration
+## Matching API
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+`POST /api/match` accepts JSON preferences. Example:
+
+```json
+{
+  "intent": "rent",
+  "maximumBudget": 3000000,
+  "township": "hlaing",
+  "propertyType": "apartment",
+  "bedrooms": 2,
+  "bathrooms": 1,
+  "minimumAreaSqft": 500,
+  "pets": true,
+  "facilities": {
+    "parking": "must_have",
+    "generator": "prefer"
+  }
+}
+```
+
+The response identifies the active engine (`prolog` or `node-fallback`) and returns ranked matches with `score`, `scoreStatus`, `matchedWeight`, `selectedWeight`, machine-readable `reasons`, readable `explanations`, and transparent `warnings` for details missing from a source listing.
+
+### Core score weights
+
+| Criterion | Points |
+| --- | ---: |
+| Within budget | 40 |
+| Preferred township | 25 |
+| Property type | 10 |
+| Required bedrooms | 20 |
+| Required bathrooms | 5 |
+| Minimum area | 5 |
+| Each preferred facility | 2 |
+| Each must-have facility confirmed | 3 |
+
+The weights are normalized against only the criteria selected by the user:
+
+```text
+Match Score = matched weight / selected weight * 100
+```
+
+For example, if property type is the only selected criterion and it matches, the score is 100%, not 10%. If no scored preference is selected, `scoreStatus` is `not_scored` and the interface displays `Not Scored`. Land purpose automatically limits candidates to land and is not counted as a separate property-type preference.
+
+The final percentage is rounded and capped at 100. Budget, township, property type, known minimum size, bedrooms, and known-false must-have facilities can remove a property. Because source listings have incomplete amenity data, an unknown amenity is retained with a verification warning and earns no points.
+
+### Search category rules
+
+- Rent searches include apartments, condominiums, houses, and shared homes offered for rent.
+- Buy-home searches include apartments, condominiums, and houses offered for sale.
+- Land searches include vacant-land sale listings only.
+- A vacant-land rental record is preserved in the source database but excluded from the `Rent a home` matching results.
+
+## Other API routes
+
+- `GET /api/properties`
+- `GET /api/properties?listingType=rent&township=hlaing`
+- `GET /api/properties/:id`
+- `POST /api/match`
+
+## Verification
+
+```cmd
+npm test
+npm run lint
+npm run build
+```
+
+When `SWIPL_PATH` is configured, `npm test` also runs the real SWI-Prolog integration test. Without SWI-Prolog, only that one test is skipped and the Node fallback remains available.
+
+Property records in `server/data/properties.json` preserve their source URL and are marked `unverified`; current availability must be confirmed with the listing agent.

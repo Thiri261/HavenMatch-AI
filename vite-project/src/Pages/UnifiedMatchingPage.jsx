@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import Header from '../components/Header'
+import { parseNaturalSearch } from '../data/naturalSearch'
 
 export default function UnifiedMatchingPage() {
   const initialPurpose = window.location.hash.includes('/buy') ? 'Buy' : window.location.hash.startsWith('#land') ? 'Land' : 'Rent'
@@ -20,14 +21,23 @@ export default function UnifiedMatchingPage() {
 
   const applyNaturalSearch = (event) => {
     event.preventDefault()
-    const query = aiQuery.toLowerCase()
-    const knownTownship = ['Ahlone', 'Bahan', 'Hlaing', 'Kamayut', 'Sanchaung', 'Yankin'].find((name) => query.includes(name.toLowerCase()))
-    if (knownTownship) setTownship(knownTownship)
-    if (query.includes('land')) setPurpose('Land')
-    else if (query.includes('buy')) setPurpose('Buy')
-    else if (query.includes('rent')) setPurpose('Rent')
-    const bedroomMatch = query.match(/(one|two|three|1|2|3)[ -]?bed/)
-    if (bedroomMatch) setBeds(String({ one: 1, two: 2, three: 3 }[bedroomMatch[1]] || bedroomMatch[1]))
+    const parsed = parseNaturalSearch(aiQuery)
+    if (!parsed) return
+    const nextDetails = { ...details, ...parsed.details, facilities: { ...(Array.isArray(details.facilities) ? {} : details.facilities), ...parsed.details.facilities } }
+    setPurpose(parsed.purpose)
+    setTownship(parsed.township)
+    setPropertyType(parsed.propertyType)
+    setBeds(parsed.beds)
+    setDetails(nextDetails)
+    localStorage.setItem('havenmatch-unified-preferences', JSON.stringify({
+      purpose: parsed.purpose,
+      township: parsed.township,
+      budget: 'Any budget',
+      beds: parsed.beds,
+      propertyType: parsed.propertyType,
+      details: nextDetails,
+    }))
+    window.location.hash = '#review'
   }
 
   return (

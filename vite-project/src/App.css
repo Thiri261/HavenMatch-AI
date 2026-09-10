@@ -505,7 +505,7 @@
 .dashboard-empty-compact { min-height: 220px; }
 .dashboard-agents { scroll-margin-top: 20px; }
 .contacted-agent-list { display: grid; gap: 10px; }
-.contacted-agent-list article { padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 10px; border: 1px solid #dce5e0; border-radius: 9px; }
+.contacted-agent-list article { padding: 16px; display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px; border: 1px solid #dce5e0; border-radius: 9px; }
 .contacted-agent-list article > div { min-width: 0; display: grid; gap: 4px; }
 .contacted-agent-list span, .contacted-agent-list small { color: #60777f; font-size: 11px; }
 .contacted-agent-list span a { color: var(--green); font-weight: 800; }
@@ -523,6 +523,20 @@
 .dashboard-sidebar a span { color: var(--green); }
 .dashboard-sidebar strong, .dashboard-sidebar p { font-size: 13px; }
 .dashboard-sidebar p { margin-bottom: 0; color: #60777f; }
+.dashboard-account-actions { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.dashboard-account button { min-height: 40px; padding: 8px 10px; border: 1px solid var(--green); border-radius: 7px; color: var(--green); background: #fff; font: inherit; font-size: 12px; font-weight: 800; cursor: pointer; }
+.dashboard-account button:hover { color: #fff; background: var(--green); }
+.dashboard-account button.dashboard-logout { border-color: #b74835; color: #9f3526; }
+.dashboard-account button.dashboard-logout:hover { color: #fff; background: #b74835; }
+.dashboard-account button:disabled { cursor: wait; opacity: .65; }
+.dashboard-account form { margin-top: 18px; display: grid; gap: 11px; }
+.dashboard-account form label { display: grid; gap: 5px; color: var(--navy); font-size: 12px; font-weight: 700; }
+.dashboard-account form input { min-width: 0; height: 40px; padding: 0 10px; border: 1px solid #cbd8d2; border-radius: 7px; color: var(--navy); font: inherit; }
+.dashboard-account form small { color: #60777f; font-size: 11px; line-height: 1.4; }
+.dashboard-account form button { color: #fff; background: var(--green); }
+.dashboard-account-message { margin-top: 12px !important; padding: 9px 10px; border-radius: 7px; font-size: 11px !important; }
+.dashboard-account-message.success { color: #166534; background: #f0fdf4; }
+.dashboard-account-message.error { color: #991b1b; background: #fef2f2; }
 .site-footer { color: #dbe8e3; background: #062d3b; }
 .footer-main { width: min(calc(100% - 56px), 1400px); margin: 0 auto; padding: 52px 0 42px; display: grid; grid-template-columns: minmax(280px, 1.8fr) repeat(3, minmax(135px, 1fr)); gap: 56px; }
 .footer-about > a { display: inline-flex; align-items: center; gap: 11px; color: #fff; text-decoration: none; font-size: 21px; }
@@ -530,8 +544,8 @@
 .footer-about p { max-width: 390px; margin: 17px 0 0; color: #a9c0c5; font-size: 14px; line-height: 1.65; }
 .footer-main nav { display: flex; flex-direction: column; align-items: flex-start; gap: 11px; }
 .footer-main nav h2 { margin: 4px 0 7px; color: #fff; font-size: 14px; }
-.footer-main nav a { color: #b8cccf; text-decoration: none; font-size: 13px; }
-.footer-main nav a:hover { color: #fff; text-decoration: underline; }
+.footer-main nav a, .footer-main nav button { padding: 0; border: 0; color: #b8cccf; background: transparent; text-decoration: none; font: inherit; font-size: 13px; cursor: pointer; }
+.footer-main nav a:hover, .footer-main nav button:hover { color: #fff; text-decoration: underline; }
 .footer-bottom { width: min(calc(100% - 56px), 1400px); min-height: 64px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-top: 1px solid rgba(255,255,255,.14); color: #91abb0; font-size: 12px; }
 @media (max-width: 1100px) {
   .browse-filters { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -841,7 +855,7 @@
   .brand { font-size: 20px; }
   .brand-mark { width: 34px; height: 34px; }
   .header-nav { gap: 14px; }
-  .header-nav-left a:nth-child(n+2) { display: none; }
+  .header-nav-left { gap: 16px; }
   .header-nav-right > a.header-login { display: none; }
   .header-cta { min-height: 43px; padding-inline: 18px; font-size: 14px; }
   .hero-section { min-height: 540px; padding-block: 46px; background-image: linear-gradient(90deg, rgba(6, 45, 59, 0.9) 0%, rgba(6, 45, 59, 0.67) 58%, rgba(6, 45, 59, 0.28) 100%), url('/images/yangon-city-hero.png'); background-position: 68% center; }

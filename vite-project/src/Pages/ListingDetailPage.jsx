@@ -87,9 +87,6 @@ export default function ListingDetailPage() {
     if (navigator.share) await navigator.share(data)
     else await navigator.clipboard.writeText(window.location.href)
   }
-  const openSourceListing = () => {
-    if (listing.sourceUrl) window.open(listing.sourceUrl, '_blank', 'noopener,noreferrer')
-  }
   const backHref = listing.purpose === 'Land' ? '#browse/land' : listing.purpose === 'Buy' ? '#browse/buy' : '#browse/rent'
   const availabilityLabel = listing.isApiListing
     ? `${displayWords(listing.availabilityStatus)} listing`
@@ -113,12 +110,12 @@ export default function ListingDetailPage() {
             <dl>{listing.purpose !== 'Land' && <><div><dt>{listing.beds ?? '—'}</dt><dd>beds</dd></div><div><dt>{listing.baths ?? '—'}</dt><dd>baths</dd></div></>}<div><dt>{listing.sqft === null ? '—' : money.format(listing.sqft)}</dt><dd>sqft</dd></div></dl>
           </div>
           <div className="listing-facts">
-            <span>⌂ {listing.type}</span>{listing.built && <span>◷ Built in {listing.built}</span>}{listing.floor !== null && listing.floor !== undefined && <span>▤ Floor {listing.floor}</span>}<span>▱ {listing.township}</span><span>{listing.isApiListing ? 'ⓘ' : '✓'} {availabilityLabel}</span>{listing.sourceSite && <span>↗ Source: {listing.sourceSite}</span>}
+            <span>⌂ {listing.type}</span>{listing.built && <span>◷ Built in {listing.built}</span>}{listing.floor !== null && listing.floor !== undefined && <span>▤ Floor {listing.floor}</span>}<span>▱ {listing.township}</span><span>{listing.isApiListing ? 'ⓘ' : '✓'} {availabilityLabel}</span>
           </div>
-          <section className="listing-special"><p>PROPERTY DETAILS</p><h2>{listing.title}</h2>{listing.features.length > 0 && <div>{listing.features.map((feature) => <span key={feature}>✓ {feature}</span>)}</div>}<p>{listing.description}</p></section>
+          <section className="listing-special"><p>PROPERTY DETAILS</p><h2>{listing.title}</h2>{listing.features.length > 0 && <div>{listing.features.map((feature) => <span key={feature}>✓ {feature}</span>)}</div>}{!listing.isApiListing && <p>{listing.description}</p>}</section>
         </div>
         <aside className="listing-contact-card">
-          {listing.isApiListing ? <><p>Interested in this property?</p><h2>Check availability</h2><button className="request-tour-button" type="button" onClick={openSourceListing} disabled={!listing.sourceUrl}>View original listing</button><small>This imported listing is {listing.availabilityStatus || 'unverified'}. Confirm its current price, availability and missing details on the source website.</small></> : <><p>Interested in this property?</p><h2>Arrange a viewing</h2><button className="request-tour-button" type="button" onClick={requestTour} disabled={loading}>{contacted ? 'Email prepared ✓' : 'Request a tour'}</button><button className="contact-agent-button" type="button" onClick={revealContact} disabled={loading}>{showContact ? 'Hide agent details' : 'Contact agent'}</button>{showContact && <address className="agent-contact-details"><strong>{agent.name}</strong><a href={`tel:${agent.phone.replace(/\s/g, '')}`}>{agent.phone}</a><a href={`mailto:${agent.email}`}>{agent.email}</a><span>{agent.address}</span></address>}<small>{contacted ? 'Your email app has opened with the tour request ready to send.' : session ? 'Signed in—agent actions are available.' : 'Log in to request a tour or view agent details.'}</small></>}
+          <p>Interested in this property?</p><h2>Arrange a viewing</h2><button className="request-tour-button" type="button" onClick={requestTour} disabled={loading}>{contacted ? 'Email prepared ✓' : 'Request a tour'}</button><button className="contact-agent-button" type="button" onClick={revealContact} disabled={loading}>{showContact ? 'Hide agent details' : 'Contact agent'}</button>{showContact && <address className="agent-contact-details"><strong>{agent.name}</strong><a href={`tel:${agent.phone.replace(/\s/g, '')}`}>{agent.phone}</a><a href={`mailto:${agent.email}`}>{agent.email}</a><span>{agent.address}</span></address>}<small>{contacted ? 'Your email app has opened with the tour request ready to send.' : session ? 'Signed in—agent actions are available.' : 'Log in to request a tour or view agent details.'}</small>
         </aside>
       </div>
     </main>

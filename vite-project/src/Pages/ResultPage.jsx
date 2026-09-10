@@ -70,6 +70,9 @@ export default function ResultPage() {
         score: item.scoreStatus === 'not_scored' ? 'Not Scored' : `${item.score}%`,
         image: item.imageUrl,
         tags: item.explanations?.map((explanation) => explanation.text) || item.reasons.map((reason) => reason.replaceAll('_', ' ')),
+        warnings: item.warnings || [],
+        dataQuality: item.dataQuality,
+        isPartialMatch: item.isPartialMatch === true,
       }))
     : fallbackProperties
 
@@ -80,7 +83,9 @@ export default function ResultPage() {
       <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 40px auto' }}>
         <div style={{ fontSize: '28px', marginBottom: '8px' }}>🎉 <b>AI Matched Results</b></div>
         <p style={{ color: '#64748b', fontSize: '15px' }}>
-          Based on your preference model, we found top properties matching your criteria.
+          {hasApiResult && stored.matchMode === 'closest'
+            ? 'No exact match met every requirement, so these are your highest-scoring closest options.'
+            : 'Based on your preference model, we found top properties matching your criteria.'}
         </p>
       </div>
 
@@ -129,6 +134,7 @@ export default function ResultPage() {
               }}>
                 Match Score: {item.score}
               </span>
+              {item.isPartialMatch && <span style={{ position: 'absolute', top: '12px', left: '12px', padding: '6px 10px', borderRadius: '20px', backgroundColor: '#fff7ed', color: '#9a3412', fontSize: '11px', fontWeight: 'bold' }}>Closest match</span>}
             </div>
 
             {/* Content Details */}
@@ -158,6 +164,19 @@ export default function ResultPage() {
                     </span>
                   ))}
                 </div>
+                {item.dataQuality === 'contains_synthetic_demo_data' && item.warnings.some((warning) => warning.code === 'synthetic_demo_data_used') && (
+                  <p style={{ margin: '0 0 16px', padding: '8px 10px', borderRadius: '8px', backgroundColor: '#fff7ed', color: '#9a3412', fontSize: '11px', lineHeight: 1.45 }}>
+                    ⚠ {item.warnings.find((warning) => warning.code === 'synthetic_demo_data_used').text}
+                  </p>
+                )}
+                {item.isPartialMatch && item.warnings.some((warning) => warning.code.startsWith('unmet_')) && (
+                  <div style={{ margin: '0 0 16px', padding: '10px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#991b1b', fontSize: '11px', lineHeight: 1.45 }}>
+                    <strong>Doesn’t fully match:</strong>
+                    <ul style={{ margin: '5px 0 0', paddingLeft: '18px' }}>
+                      {item.warnings.filter((warning) => warning.code.startsWith('unmet_')).map((warning) => <li key={warning.code}>{warning.text}</li>)}
+                    </ul>
+                  </div>
+                )}
               </div>
 
               {/* Action Button */}

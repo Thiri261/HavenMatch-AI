@@ -60,6 +60,21 @@ const REASON_BY_FACILITY = {
   pets_allowed: 'pets_allowed', near_shops: 'near_shops', near_bus_stop: 'near_bus_stop', main_road_access: 'main_road_access',
 }
 
+const PROPERTY_FIELD_BY_REASON = {
+  within_budget: 'priceMmk', preferred_township: 'township', preferred_property_type: 'propertyType',
+  enough_bedrooms: 'bedrooms', enough_bathrooms: 'bathrooms', sufficient_area: 'areaSqft',
+  ...Object.fromEntries(FACILITY_RULES.map(([requestKey, propertyKey]) => [REASON_BY_FACILITY[requestKey], propertyKey])),
+}
+
+const FAILED_REQUIREMENT_TEXT = {
+  over_budget: 'Price is above your maximum budget.',
+  different_township: 'Located outside your preferred township.',
+  different_property_type: 'Property type differs from your selection.',
+  not_enough_bedrooms: 'Has fewer bedrooms than requested.',
+  not_enough_bathrooms: 'Has fewer bathrooms than requested.',
+  area_too_small: 'Listed area is below your minimum size.',
+}
+
 export class MatchValidationError extends Error {
   constructor(message) {
     super(message)
@@ -222,6 +237,12 @@ export function calculateMatch(property, request) {
 function buildWarnings(property, request) {
   const warnings = []
   const add = (code, text) => warnings.push({ code, text })
+  for (const failure of Array.isArray(property.failedRequirements) ? property.failedRequirements : []) {
+    const facilityKey = failure.endsWith('_required') ? failure.slice(0, -'_required'.length) : null
+    const facility = facilityKey ? FACILITY_RULES.find(([requestKey]) => requestKey === facilityKey) : null
+    const text = FAILED_REQUIREMENT_TEXT[failure] || (facility ? `Does not meet your must-have requirement for ${facility[2]}.` : String(failure).replaceAll('_', ' '))
+    add(`unmet_${failure}`, text)
+  }
   if (request.bathrooms !== null && !Number.isFinite(property.bathrooms)) {
     add('bathroom_information_unavailable', 'The listing does not state the bathroom count; verify it with the agent.')
   }
@@ -233,6 +254,20 @@ function buildWarnings(property, request) {
       add(`${requestKey}_information_unavailable`, `The listing does not confirm ${label}; verify it with the agent.`)
     }
   }
+  const syntheticFields = new Set(Array.isArray(property.syntheticFields) ? property.syntheticFields : [])
+  const selectedSyntheticFields = []
+  if (request.bedrooms !== null && syntheticFields.has('bedrooms')) selectedSyntheticFields.push('bedrooms')
+  if (request.bathrooms !== null && syntheticFields.has('bathrooms')) selectedSyntheticFields.push('bathrooms')
+  if (request.minimumAreaSqft !== null && syntheticFields.has('areaSqft')) selectedSyntheticFields.push('areaSqft')
+  for (const [requestKey, propertyKey] of FACILITY_RULES) {
+    if (preferred(request.facilities, requestKey) && syntheticFields.has(propertyKey)) selectedSyntheticFields.push(propertyKey)
+  }
+  if (selectedSyntheticFields.length) {
+    add(
+      'synthetic_demo_data_used',
+      `Demo-generated values influenced this match: ${[...new Set(selectedSyntheticFields)].join(', ')}. Verify them on the original listing before making a decision.`,
+    )
+  }
   return warnings
 }
 
@@ -240,7 +275,12 @@ export function enrichMatch(match, request) {
   // Keep API explanations stable even if an external rule engine emits the
   // same reason more than once.
   const reasons = [...new Set(Array.isArray(match.reasons) ? match.reasons : [])]
-  const explanations = reasons.map((code) => ({ code, text: REASON_TEXT[code] || String(code).replaceAll('_', ' ') }))
+  const syntheticFields = new Set(Array.isArray(match.syntheticFields) ? match.syntheticFields : [])
+  const explanations = reasons.map((code) => {
+    const text = REASON_TEXT[code] || String(code).replaceAll('_', ' ')
+    const isSynthetic = syntheticFields.has(PROPERTY_FIELD_BY_REASON[code])
+    return { code, text: isSynthetic ? `Demo estimate: ${text.replace(/^The listing confirms /, '').replace(/^It /, 'it ').replace(/^This property /, 'this property ')}` : text, isSynthetic }
+  })
   const warnings = buildWarnings(match, request)
   const selectedWeight = Number.isFinite(Number(match.selectedWeight)) ? Number(match.selectedWeight) : calculateSelectedWeight(request)
   const matchedWeight = Number.isFinite(Number(match.matchedWeight)) ? Number(match.matchedWeight) : null
@@ -254,6 +294,8 @@ export function enrichMatch(match, request) {
     reasons,
     explanations,
     warnings,
+    dataQuality: syntheticFields.size ? 'contains_synthetic_demo_data' : 'source_listing_data',
+    isPartialMatch: match.isPartialMatch === true,
     explanationSummary: `${explanations.length} preference${explanations.length === 1 ? '' : 's'} matched${warnings.length ? `; ${warnings.length} listing detail${warnings.length === 1 ? '' : 's'} need verification` : ''}.`,
   }
 }

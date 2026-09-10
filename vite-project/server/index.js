@@ -1,14 +1,14 @@
-/* global process, Buffer */
+/* global process */
 import { createServer } from 'node:http'
 import { execFile } from 'node:child_process'
-import { randomBytes, scrypt as scryptCallback, timingSafeEqual } from 'node:crypto'
+import { randomBytes } from 'node:crypto'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, extname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { getProperties, matchProperties } from './matching.js'
+import { hashPassword, passwordMatches, passwordPolicyMessage, strongPassword } from './passwords.js'
 
-const scrypt = promisify(scryptCallback)
 const execFileAsync = promisify(execFile)
 const port = Number(process.env.PORT || 3001)
 const serverDirectory = dirname(fileURLToPath(import.meta.url))
@@ -18,7 +18,6 @@ const sessions = new Map()
 const attempts = new Map()
 const prologExecutable = process.env.SWIPL_PATH || (process.platform === 'win32' ? 'swipl.exe' : 'swipl')
 let prologHealth = { status: 'checking', executable: prologExecutable }
-const strongPassword = /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,128}$/
 
 async function getUsers() {
   try { return JSON.parse(await readFile(dataFile, 'utf8')) } catch (error) {
@@ -30,18 +29,6 @@ async function getUsers() {
 async function saveUsers(users) {
   await mkdir(dirname(dataFile), { recursive: true })
   await writeFile(dataFile, JSON.stringify(users, null, 2))
-}
-
-async function hashPassword(password, salt = randomBytes(16).toString('hex')) {
-  const hash = await scrypt(password, salt, 64)
-  return `${salt}:${Buffer.from(hash).toString('hex')}`
-}
-
-async function passwordMatches(password, stored) {
-  const [salt, expectedHex] = stored.split(':')
-  const actual = Buffer.from(await scrypt(password, salt, 64))
-  const expected = Buffer.from(expectedHex, 'hex')
-  return actual.length === expected.length && timingSafeEqual(actual, expected)
 }
 
 function cookies(request) {
@@ -177,6 +164,27 @@ const server = createServer(async (request, response) => {
       return respond(response, 200, { user: null }, { 'Set-Cookie': sessionCookie('', 0) })
     }
 
+    if (request.method === 'POST' && url.pathname === '/api/auth/change-password') {
+      const token = cookies(request).havenmatch_session
+      const activeSession = sessions.get(token)
+      if (!activeSession || activeSession.expiresAt < Date.now()) return respond(response, 401, { message: 'Log in again to change your password.' })
+      const input = await body(request)
+      const currentPassword = String(input.currentPassword || '')
+      const newPassword = String(input.newPassword || '')
+      if (!strongPassword.test(newPassword)) return respond(response, 400, { message: passwordPolicyMessage })
+      if (currentPassword === newPassword) return respond(response, 400, { message: 'Your new password must be different from your current password.' })
+      const users = await getUsers()
+      const user = users.find((item) => item.id === activeSession.user.id)
+      if (!user || !(await passwordMatches(currentPassword, user.passwordHash))) return respond(response, 400, { message: 'Current password is incorrect.' })
+      user.passwordHash = await hashPassword(newPassword)
+      user.passwordChangedAt = new Date().toISOString()
+      await saveUsers(users)
+      for (const [sessionToken, session] of sessions) {
+        if (sessionToken !== token && session.user.id === user.id) sessions.delete(sessionToken)
+      }
+      return respond(response, 200, { message: 'Password changed successfully.' })
+    }
+
     if (request.method !== 'POST') return respond(response, 405, { message: 'Method not allowed.' })
     const ip = request.socket.remoteAddress || 'unknown'
     const recent = (attempts.get(ip) || []).filter((time) => Date.now() - time < 60_000)
@@ -187,7 +195,7 @@ const server = createServer(async (request, response) => {
     const email = String(input.email || '').trim().toLowerCase()
     const password = String(input.password || '')
     if (!/^\S+@\S+\.\S+$/.test(email)) return respond(response, 400, { message: 'Enter a valid email address.' })
-    if (!strongPassword.test(password)) return respond(response, 400, { message: 'Password must have at least 8 characters, including an uppercase letter, a number, and a special character.' })
+    if (!strongPassword.test(password)) return respond(response, 400, { message: passwordPolicyMessage })
     const users = await getUsers()
     let user = users.find((item) => item.email === email)
 

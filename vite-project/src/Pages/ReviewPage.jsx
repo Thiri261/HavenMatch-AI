@@ -28,6 +28,7 @@ function convertToSquareFeet(value, unit) {
 }
 
 function maximumBudget(saved, details) {
+  if (Number.isFinite(details.maximumBudget) && details.maximumBudget > 0) return details.maximumBudget
   if (saved.purpose === 'Land') return LAND_BUDGET_MAX[details.purchaseBudget] ?? null
   if (!saved.budget || saved.budget === 'Any budget') return null
   const selected = Number(saved.budget)
@@ -90,7 +91,7 @@ export default function ReviewPage() {
       if (details.commute === 'Near main road' && !facilities.main_road_access) facilities.main_road_access = 'prefer'
       if (details.area === 'Near shops and markets' && !facilities.near_shops) facilities.near_shops = 'prefer'
 
-      const landArea = details.flexibleSize ? null : convertToSquareFeet(LAND_SIZE_MIN[details.landSize], details.landUnit)
+      const landArea = details.flexibleSize ? null : details.landSizeSqft || convertToSquareFeet(LAND_SIZE_MIN[details.landSize], details.landUnit)
       const request = {
         intent: saved.purpose || 'Rent',
         maximumBudget: maximumBudget(saved, details),

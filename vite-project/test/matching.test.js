@@ -108,6 +108,38 @@ test('returns readable explanations and transparent unknown-data warnings', () =
   assert.ok(result.warnings.some((item) => item.code === 'security_information_unavailable'))
 })
 
+test('labels synthetic demo fields in explanations and warnings', () => {
+  const request = normalizeRequest({ intent: 'rent', bedrooms: 2, facilities: { parking: 'prefer' } })
+  const syntheticProperty = { ...property, syntheticFields: ['bedrooms', 'parking'], hasSyntheticDemoData: true }
+  const scored = calculateMatch(syntheticProperty, request)
+  const result = enrichMatch({ ...syntheticProperty, ...scored }, request)
+
+  assert.equal(result.dataQuality, 'contains_synthetic_demo_data')
+  assert.ok(result.explanations.some((item) => item.code === 'enough_bedrooms' && item.isSynthetic && item.text.startsWith('Demo estimate:')))
+  assert.ok(result.explanations.some((item) => item.code === 'parking_available' && item.isSynthetic && item.text.startsWith('Demo estimate:')))
+  assert.ok(result.warnings.some((item) => item.code === 'synthetic_demo_data_used' && item.text.includes('bedrooms') && item.text.includes('parking')))
+})
+
+test('labels unmet requirements on closest partial matches', () => {
+  const request = normalizeRequest({ intent: 'rent', maximumBudget: 1_000_000, bedrooms: 3 })
+  const scored = calculateMatch(property, request)
+  const result = enrichMatch({ ...property, ...scored, isPartialMatch: true }, request)
+
+  assert.equal(result.isPartialMatch, true)
+  assert.ok(result.score < 100)
+  assert.ok(result.warnings.some((item) => item.code === 'unmet_over_budget'))
+  assert.ok(result.warnings.some((item) => item.code === 'unmet_not_enough_bedrooms'))
+})
+
+test('returns closest percentage matches when no property meets every requirement', async () => {
+  const result = await matchProperties({ intent: 'rent', maximumBudget: 1 })
+
+  assert.equal(result.matchMode, 'closest')
+  assert.ok(result.matches.length > 0)
+  assert.ok(result.matches.every((item) => item.isPartialMatch))
+  assert.ok(result.matches.every((item) => item.warnings.some((warning) => warning.code === 'unmet_over_budget')))
+})
+
 test('removes duplicate reason codes before building explanations', () => {
   const request = normalizeRequest({ intent: 'buy', propertyType: 'apartment' })
   const result = enrichMatch({

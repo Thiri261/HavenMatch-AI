@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import Header from '../components/Header'
 import listings from '../data/listings'
-import useSession from '../hooks/useSession'
+import useSession, { announceAuthChange } from '../hooks/useSession'
 
 const money = new Intl.NumberFormat('en-US')
 
@@ -10,6 +10,10 @@ export default function DashboardPage() {
   const savedKey = session ? `havenmatch-saved-${session.email}` : ''
   const [savedRevision, setSavedRevision] = useState(0)
   const [searchRevision, setSearchRevision] = useState(0)
+  const [showPasswordForm, setShowPasswordForm] = useState(false)
+  const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' })
+  const [accountMessage, setAccountMessage] = useState({ type: '', text: '' })
+  const [accountBusy, setAccountBusy] = useState(false)
   const saved = useMemo(() => {
     void savedRevision
     return savedKey ? JSON.parse(localStorage.getItem(savedKey) || '[]') : []
@@ -42,6 +46,39 @@ export default function DashboardPage() {
     setSearchRevision((revision) => revision + 1)
   }
 
+  const logOut = async () => {
+    setAccountBusy(true)
+    try { await fetch('/api/auth/logout', { method: 'POST', credentials: 'include' }) } finally {
+      announceAuthChange(null)
+      window.location.assign('#signin')
+    }
+  }
+
+  const changePassword = async (event) => {
+    event.preventDefault()
+    setAccountMessage({ type: '', text: '' })
+    if (passwords.next !== passwords.confirm) {
+      setAccountMessage({ type: 'error', text: 'New passwords do not match.' })
+      return
+    }
+    setAccountBusy(true)
+    try {
+      const response = await fetch('/api/auth/change-password', {
+        method: 'POST', credentials: 'include', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: passwords.current, newPassword: passwords.next }),
+      })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.message || 'Unable to change password.')
+      setPasswords({ current: '', next: '', confirm: '' })
+      setShowPasswordForm(false)
+      setAccountMessage({ type: 'success', text: result.message })
+    } catch (error) {
+      setAccountMessage({ type: 'error', text: error.message || 'Unable to change password.' })
+    } finally {
+      setAccountBusy(false)
+    }
+  }
+
   if (loading || !session) return null
 
   return (
@@ -59,10 +96,10 @@ export default function DashboardPage() {
             {savedSearches.length ? <div className="saved-search-list">{savedSearches.map((search) => <article key={search.id}><div><strong>{search.purpose} properties</strong><span>{[search.query, search.township, search.budget !== 'Any budget' ? `Up to ${money.format(Number(search.budget))} MMK` : '', search.beds !== 'Any beds' ? `${search.beds}+ beds` : '', search.type !== 'Any type' ? search.type : ''].filter(Boolean).join(' · ')}</span></div><button type="button" onClick={() => openSearch(search)}>Open search</button><button className="delete-search" type="button" onClick={() => removeSearch(search.id)}>Delete</button></article>)}</div> : <div className="dashboard-empty dashboard-empty-compact"><span>⌕</span><h3>No saved searches yet</h3><p>Save a property search and it will appear here.</p><a href="#browse/rent">Browse properties</a></div>}
           </section>
           <section className="dashboard-favourites dashboard-agents" id="dashboard-agents"><div className="dashboard-section-title"><div><h2>Your contacted agents</h2><p>Agents you contacted while viewing properties.</p></div></div>
-            {contactedAgents.length ? <div className="contacted-agent-list">{contactedAgents.map((contact) => <article key={`${contact.id}-${contact.listingId}`}><div><strong>{contact.name}</strong><span>Regarding <a href={`#listing/${contact.listingId}`}>{contact.listingTitle}</a></span><small>{contact.address}</small></div><a href={`tel:${contact.phone.replace(/\s/g, '')}`}>Call</a><a href={`mailto:${contact.email}?subject=${encodeURIComponent(`Regarding ${contact.listingTitle}`)}`}>Email</a></article>)}</div> : <div className="dashboard-empty dashboard-empty-compact"><span>♙</span><h3>No contacted agents yet</h3><p>Agent details you view will be saved here.</p><a href="#browse/rent">Browse properties</a></div>}
+            {contactedAgents.length ? <div className="contacted-agent-list">{contactedAgents.map((contact) => <article key={`${contact.id}-${contact.listingId}`}><div><strong>{contact.name}</strong><span>Regarding <a href={`#listing/${contact.listingId}`}>{contact.listingTitle}</a></span><small>{contact.address}</small></div><a href={`mailto:${contact.email}?subject=${encodeURIComponent(`Regarding ${contact.listingTitle}`)}`}>Email</a></article>)}</div> : <div className="dashboard-empty dashboard-empty-compact"><span>♙</span><h3>No contacted agents yet</h3><p>Agent details you view will be saved here.</p><a href="#browse/rent">Browse properties</a></div>}
           </section>
           </div>
-          <aside className="dashboard-sidebar"><section><h2>Quick actions</h2><a href="#matching">Get AI recommendations <span>→</span></a><a href="#browse/rent">Browse rental homes <span>→</span></a><a href="#browse/buy">Browse homes to buy <span>→</span></a><a href="#browse/land">Browse available land <span>→</span></a></section><section><h2>Account</h2><strong>{session.name}</strong><p>{session.email}</p></section></aside>
+          <aside className="dashboard-sidebar"><section><h2>Quick actions</h2><a href="#matching">Get AI recommendations <span>→</span></a><a href="#browse/rent">Browse rental homes <span>→</span></a><a href="#browse/buy">Browse homes to buy <span>→</span></a><a href="#browse/land">Browse available land <span>→</span></a></section><section className="dashboard-account"><h2>Account</h2><strong>{session.name}</strong><p>{session.email}</p><div className="dashboard-account-actions"><button type="button" onClick={() => { setShowPasswordForm((visible) => !visible); setAccountMessage({ type: '', text: '' }) }}>{showPasswordForm ? 'Cancel' : 'Change password'}</button><button className="dashboard-logout" type="button" onClick={logOut} disabled={accountBusy}>Log out</button></div>{showPasswordForm && <form onSubmit={changePassword}><label>Current password<input type="password" autoComplete="current-password" required value={passwords.current} onChange={(event) => setPasswords((current) => ({ ...current, current: event.target.value }))} /></label><label>New password<input type="password" autoComplete="new-password" required minLength="8" value={passwords.next} onChange={(event) => setPasswords((current) => ({ ...current, next: event.target.value }))} /></label><label>Confirm new password<input type="password" autoComplete="new-password" required minLength="8" value={passwords.confirm} onChange={(event) => setPasswords((current) => ({ ...current, confirm: event.target.value }))} /></label><small>Use at least 8 characters with an uppercase letter, number, and special character.</small><button type="submit" disabled={accountBusy}>{accountBusy ? 'Updating…' : 'Update password'}</button></form>}{accountMessage.text && <p className={`dashboard-account-message ${accountMessage.type}`} role={accountMessage.type === 'error' ? 'alert' : 'status'}>{accountMessage.text}</p>}</section></aside>
         </div>
       </main>
     </div>

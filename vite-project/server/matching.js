@@ -9,6 +9,7 @@ import { calculateMatch, enrichMatch, isPropertyEligibleForIntent, normalizeRequ
 const serverDirectory = dirname(fileURLToPath(import.meta.url))
 const propertiesPath = join(serverDirectory, 'data', 'properties.json')
 const prologPath = join(serverDirectory, 'prolog', 'engine.pl')
+const SYNTHETIC_DATA_NOTICE = 'Demo-generated property details are used for matching. Verify bedrooms, bathrooms, area, pets, and amenities on the original listing before making a decision.'
 
 export { calculateMatch, enrichMatch, isPropertyEligibleForIntent, MatchValidationError, normalizeRequest, validateMatchRequest } from './matching-core.js'
 
@@ -33,6 +34,21 @@ export function runProlog(request, properties) {
   })
 }
 
+function closestMatches(properties, request) {
+  return properties
+    .map((property) => ({ property, ...calculateMatch(property, request) }))
+    .sort((a, b) => b.score - a.score || a.failedRequirements.length - b.failedRequirements.length || a.property.priceMmk - b.property.priceMmk)
+    .slice(0, 20)
+    .map(({ property, ...match }) => enrichMatch({ ...property, ...match, isPartialMatch: match.failedRequirements.length > 0 }, request))
+}
+
+function responseMetadata(properties) {
+  return {
+    candidateCount: properties.length,
+    dataNotice: properties.some((property) => property.hasSyntheticDemoData) ? SYNTHETIC_DATA_NOTICE : null,
+  }
+}
+
 export async function matchProperties(input) {
   const request = validateMatchRequest(input, normalizeRequest(input))
   const properties = (await getProperties()).filter((property) => isPropertyEligibleForIntent(property, request.intent))
@@ -43,7 +59,8 @@ export async function matchProperties(input) {
       .map((match) => enrichMatch(match, request))
       .sort((a, b) => b.score - a.score || a.priceMmk - b.priceMmk)
       .slice(0, 20)
-    return { engine: 'prolog', request, matches, candidateCount: properties.length }
+    if (matches.length) return { engine: 'prolog', matchMode: 'exact', request, matches, ...responseMetadata(properties) }
+    return { engine: 'prolog', matchMode: 'closest', closestMatchEngine: 'node', request, matches: closestMatches(properties, request), ...responseMetadata(properties) }
   } catch (error) {
     console.error(`[HavenMatch] Prolog unavailable; using Node fallback: ${error.message}`)
   }
@@ -54,5 +71,6 @@ export async function matchProperties(input) {
     .sort((a, b) => b.score - a.score || a.property.priceMmk - b.property.priceMmk)
     .slice(0, 20)
     .map(({ property, ...match }) => enrichMatch({ ...property, ...match }, request))
-  return { engine: 'node-fallback', request, matches, candidateCount: properties.length }
+  if (matches.length) return { engine: 'node-fallback', matchMode: 'exact', request, matches, ...responseMetadata(properties) }
+  return { engine: 'node-fallback', matchMode: 'closest', request, matches: closestMatches(properties, request), ...responseMetadata(properties) }
 }

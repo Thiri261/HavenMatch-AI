@@ -26,7 +26,7 @@ property_matches(Property, Request, Score, ScoreStatus, MatchedWeight, SelectedW
     optional_type(Property, Request),
     strict_minimum(Property, Request, bedrooms, enough_bedrooms),
     known_minimum(Property, Request, bathrooms, enough_bathrooms),
-    known_minimum(Property, Request, minimumAreaSqft, sufficient_area),
+    known_property_minimum(Property, Request, areaSqft, minimumAreaSqft, sufficient_area),
     all_must_have_facilities_allowed(Property, Request),
     reasons(Property, Request, Reasons),
     matched_weight(Property, Request, MatchedWeight),
@@ -74,6 +74,16 @@ strict_minimum(Property, Request, Key, Predicate) :-
 known_minimum(Property, Request, Key, Predicate) :-
     ( get_dict(Key, Request, Required), number(Required)
     -> ( get_dict(Key, Property, Actual), number(Actual)
+       -> call(Predicate, Actual, Required)
+       ;  true
+       )
+    ;  true
+    ).
+
+% Request and property use different names for the area threshold and value.
+known_property_minimum(Property, Request, PropertyKey, RequestKey, Predicate) :-
+    ( get_dict(RequestKey, Request, Required), number(Required)
+    -> ( get_dict(PropertyKey, Property, Actual), number(Actual)
        -> call(Predicate, Actual, Required)
        ;  true
        )

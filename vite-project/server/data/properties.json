@@ -24,7 +24,13 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-premium-01.png",
+    "images": [
+      "/images/user-condo-interior-premium-01.png",
+      "/images/real_rent_001-bedroom.png",
+      "/images/real_rent_001-kitchen.png",
+      "/images/real_rent_001-balcony.png"
+    ],
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -68,7 +74,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -85,7 +91,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior-2.png",
+      "/images/user-condo-exterior-01.png"
+    ]
   },
   {
     "id": "real_rent_003",
@@ -112,7 +122,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -129,7 +139,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-01.png",
+      "/images/myanmar-condo-exterior-2.png"
+    ]
   },
   {
     "id": "real_rent_004",
@@ -156,7 +170,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-02.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -174,7 +188,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_rent_005",
@@ -201,7 +219,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-house-exterior.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -219,7 +237,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-house-exterior.png",
+      "/images/myanmar-house-large-2.png"
+    ]
   },
   {
     "id": "real_rent_006",
@@ -246,7 +268,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-02.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -264,7 +286,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_rent_007",
@@ -291,7 +317,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-bedroom-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -309,7 +335,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-bedroom-01.png",
+      "/images/user-condo-interior-02.png"
+    ]
   },
   {
     "id": "real_rent_008",
@@ -336,7 +366,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-3.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -354,7 +384,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-3.png",
+      "/images/house-listing-1.png",
+      "/images/house-listing-2.png"
+    ]
   },
   {
     "id": "real_rent_009",
@@ -381,7 +416,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -399,7 +434,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-01.png",
+      "/images/myanmar-condo-exterior-2.png"
+    ]
   },
   {
     "id": "real_rent_010",
@@ -426,7 +465,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-apartment-interior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -443,7 +482,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-apartment-interior-2.png",
+      "/images/myanmar-apartment-bedroom.png",
+      "/images/myanmar-apartment-kitchen.png"
+    ]
   },
   {
     "id": "real_rent_011",
@@ -470,7 +514,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -488,7 +532,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior.png",
+      "/images/user-condo-interior-02.png"
+    ]
   },
   {
     "id": "real_rent_012",
@@ -515,7 +563,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -533,7 +581,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-01.png",
+      "/images/myanmar-condo-exterior-2.png"
+    ]
   },
   {
     "id": "real_rent_013",
@@ -560,7 +612,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-02.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -577,7 +629,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_rent_014",
@@ -604,7 +660,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-6.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -622,7 +678,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-6.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_rent_015",
@@ -649,7 +711,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-7.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -667,7 +729,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-7.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-6.png"
+    ]
   },
   {
     "id": "real_rent_016",
@@ -694,7 +762,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-lived-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -712,7 +780,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-lived-01.png",
+      "/images/user-house-interior-modern-01.png"
+    ]
   },
   {
     "id": "real_rent_017",
@@ -739,7 +811,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-empty-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -757,7 +829,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-empty-01.png",
+      "/images/house-listing-4.png"
+    ]
   },
   {
     "id": "real_rent_018",
@@ -784,7 +860,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -802,7 +878,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-01.png",
+      "/images/myanmar-condo-exterior-2.png"
+    ]
   },
   {
     "id": "real_rent_019",
@@ -829,7 +909,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-5.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -847,7 +927,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-5.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_rent_020",
@@ -874,7 +960,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-modern-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -892,7 +978,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-modern-01.png",
+      "/images/user-house-interior-lived-01.png"
+    ]
   },
   {
     "id": "real_rent_021",
@@ -919,7 +1009,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-house-large-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -937,7 +1027,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-house-large-2.png",
+      "/images/myanmar-house-exterior.png"
+    ]
   },
   {
     "id": "real_buy_001",
@@ -964,7 +1058,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-5.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -982,7 +1076,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-5.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_buy_002",
@@ -1009,7 +1109,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-house-exterior.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -1027,7 +1127,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-house-exterior.png",
+      "/images/myanmar-house-large-2.png"
+    ]
   },
   {
     "id": "real_buy_003",
@@ -1054,7 +1158,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1072,7 +1176,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior-2.png",
+      "/images/user-condo-exterior-01.png"
+    ]
   },
   {
     "id": "real_buy_004",
@@ -1099,7 +1207,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-interior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1117,7 +1225,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-interior-2.png",
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png"
+    ]
   },
   {
     "id": "real_buy_005",
@@ -1161,7 +1274,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_006",
@@ -1188,7 +1307,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-premium-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1205,7 +1324,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-premium-01.png",
+      "/images/real_rent_001-bedroom.png",
+      "/images/real_rent_001-kitchen.png",
+      "/images/real_rent_001-balcony.png"
+    ]
   },
   {
     "id": "real_buy_007",
@@ -1232,7 +1357,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-basic-02.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1249,7 +1374,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-basic-02.png",
+      "/images/user-apartment-basic-01.png"
+    ]
   },
   {
     "id": "real_buy_008",
@@ -1276,7 +1405,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-room-modern-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1293,7 +1422,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-room-modern-01.png",
+      "/images/user-apartment-empty-01.png"
+    ]
   },
   {
     "id": "real_buy_009",
@@ -1320,7 +1453,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-empty-02.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -1337,7 +1470,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-empty-02.png",
+      "/images/user-apartment-hallway-01.png"
+    ]
   },
   {
     "id": "real_buy_010",
@@ -1364,7 +1501,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/apartment-kitchen.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1381,7 +1518,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/apartment-kitchen.png",
+      "/images/apartment-bedroom.png",
+      "/images/one-bedroom.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_011",
@@ -1408,7 +1551,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-interior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1426,7 +1569,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-interior-2.png",
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png"
+    ]
   },
   {
     "id": "real_buy_012",
@@ -1470,7 +1618,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_013",
@@ -1497,7 +1651,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-hallway-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1514,7 +1668,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-hallway-01.png",
+      "/images/user-apartment-empty-02.png"
+    ]
   },
   {
     "id": "real_buy_014",
@@ -1541,7 +1699,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1558,7 +1716,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior-2.png",
+      "/images/user-condo-exterior-01.png"
+    ]
   },
   {
     "id": "real_buy_015",
@@ -1585,7 +1747,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-interior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1602,7 +1764,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-interior-2.png",
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png"
+    ]
   },
   {
     "id": "real_buy_016",
@@ -1629,7 +1796,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-5.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -1646,7 +1813,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-5.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_buy_017",
@@ -1673,7 +1846,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-6.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -1690,7 +1863,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-6.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_land_001",
@@ -1717,7 +1896,11 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-vacant-land.png",
+    "images": [
+      "/images/myanmar-vacant-land.png",
+      "/images/land-frontage.png"
+    ]
   },
   {
     "id": "real_land_002",
@@ -1744,7 +1927,11 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-urban-2.png",
+    "images": [
+      "/images/myanmar-land-urban-2.png",
+      "/images/land-frontage.png"
+    ]
   },
   {
     "id": "real_land_003",
@@ -1771,7 +1958,11 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-frontage.png",
+    "images": [
+      "/images/land-frontage.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_land_004",
@@ -1798,7 +1989,12 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-sunset.png",
+    "images": [
+      "/images/land-sunset.png",
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png"
+    ]
   },
   {
     "id": "real_land_005",
@@ -1825,7 +2021,13 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_land_006",
@@ -1852,7 +2054,12 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-roadside.png",
+    "images": [
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-sunset.png"
+    ]
   },
   {
     "id": "real_land_007",
@@ -1879,7 +2086,12 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-sunset.png",
+    "images": [
+      "/images/land-sunset.png",
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png"
+    ]
   },
   {
     "id": "real_land_008",
@@ -1906,7 +2118,13 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_land_009",
@@ -1933,7 +2151,12 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-roadside.png",
+    "images": [
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-sunset.png"
+    ]
   },
   {
     "id": "real_land_010",
@@ -1960,7 +2183,12 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-sunset.png",
+    "images": [
+      "/images/land-sunset.png",
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png"
+    ]
   },
   {
     "id": "real_rent_022",
@@ -1987,7 +2215,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-02.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -2004,7 +2232,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_rent_023",
@@ -2031,7 +2263,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2048,7 +2280,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-01.png",
+      "/images/myanmar-condo-interior-2.png"
+    ]
   },
   {
     "id": "real_rent_024",
@@ -2075,7 +2311,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-02.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2092,7 +2328,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_rent_026",
@@ -2119,7 +2359,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -2136,7 +2376,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior.png",
+      "/images/user-condo-interior-02.png"
+    ]
   },
   {
     "id": "real_buy_018",
@@ -2163,7 +2407,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-7.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2180,7 +2424,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-7.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-6.png"
+    ]
   },
   {
     "id": "real_buy_019",
@@ -2207,7 +2457,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-lived-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2224,7 +2474,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-lived-01.png",
+      "/images/user-house-interior-modern-01.png"
+    ]
   },
   {
     "id": "real_buy_020",
@@ -2251,7 +2505,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-6.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2268,7 +2522,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-6.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_buy_022",
@@ -2295,7 +2555,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-lived-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2312,7 +2572,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-lived-01.png",
+      "/images/user-house-interior-modern-01.png"
+    ]
   },
   {
     "id": "real_buy_023",
@@ -2339,7 +2603,7 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-modern-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2356,7 +2620,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-modern-01.png",
+      "/images/user-house-interior-lived-01.png"
+    ]
   },
   {
     "id": "real_buy_024",
@@ -2383,7 +2651,7 @@
     "sourceSite": "myanmarhouse.com.mm",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/apartment-kitchen.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2401,7 +2669,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/apartment-kitchen.png",
+      "/images/apartment-bedroom.png",
+      "/images/one-bedroom.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_025",
@@ -2428,7 +2702,7 @@
     "sourceSite": "myanmarhouse.com.mm",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/one-bedroom.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2446,7 +2720,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/one-bedroom.png",
+      "/images/shared-apartment.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png"
+    ]
   },
   {
     "id": "real_buy_026",
@@ -2473,7 +2753,7 @@
     "sourceSite": "myanmarhouse.com.mm",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-empty-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2491,7 +2771,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-empty-01.png",
+      "/images/user-apartment-room-modern-01.png"
+    ]
   },
   {
     "id": "real_rent_027",
@@ -2518,7 +2802,13 @@
     "sourceSite": "myanmarhouse.com.mm",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_rent_028",
@@ -2545,7 +2835,7 @@
     "sourceSite": "myanmarhouse.com.mm",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-exterior-02.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2563,7 +2853,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-exterior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_rent_029",
@@ -2590,7 +2884,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2608,7 +2902,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-01.png",
+      "/images/myanmar-condo-interior-2.png"
+    ]
   },
   {
     "id": "real_buy_027",
@@ -2635,7 +2933,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-4.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -2653,7 +2951,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_buy_028",
@@ -2680,7 +2984,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-apartment-interior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2698,7 +3002,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-apartment-interior-2.png",
+      "/images/myanmar-apartment-bedroom.png",
+      "/images/myanmar-apartment-kitchen.png"
+    ]
   },
   {
     "id": "real_buy_029",
@@ -2725,7 +3034,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-furnished-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2743,7 +3052,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-furnished-01.png",
+      "/images/user-apartment-basic-01.png",
+      "/images/user-apartment-basic-02.png"
+    ]
   },
   {
     "id": "real_buy_030",
@@ -2787,7 +3101,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_031",
@@ -2814,7 +3134,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-lived-01.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -2832,7 +3152,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-lived-01.png",
+      "/images/user-house-interior-modern-01.png"
+    ]
   },
   {
     "id": "real_land_011",
@@ -2859,11 +3183,17 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png",
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
     "syntheticFields": [
       "areaSqft"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_land_012",
@@ -2894,7 +3224,12 @@
     "syntheticFields": [
       "areaSqft"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-sunset.png"
+    ]
   },
   {
     "id": "real_buy_032",
@@ -2921,7 +3256,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/one-bedroom.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -2939,7 +3274,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/one-bedroom.png",
+      "/images/shared-apartment.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png"
+    ]
   },
   {
     "id": "real_land_013",
@@ -2966,7 +3307,12 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-sunset.png",
+    "images": [
+      "/images/land-sunset.png",
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png"
+    ]
   },
   {
     "id": "real_land_014",
@@ -2993,7 +3339,13 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_land_015",
@@ -3020,7 +3372,12 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-roadside.png",
+    "images": [
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-sunset.png"
+    ]
   },
   {
     "id": "real_land_016",
@@ -3047,7 +3404,12 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-sunset.png",
+    "images": [
+      "/images/land-sunset.png",
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png"
+    ]
   },
   {
     "id": "real_land_017",
@@ -3074,7 +3436,11 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-urban-2.png",
+    "images": [
+      "/images/myanmar-land-urban-2.png",
+      "/images/land-frontage.png"
+    ]
   },
   {
     "id": "real_land_018",
@@ -3101,7 +3467,12 @@
     "sourceSite": "shweproperty.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-roadside.png",
+    "images": [
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-sunset.png"
+    ]
   },
   {
     "id": "real_land_019",
@@ -3128,11 +3499,15 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png",
+    "imageUrl": "/images/myanmar-vacant-land.png",
     "syntheticFields": [
       "areaSqft"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-vacant-land.png",
+      "/images/land-frontage.png"
+    ]
   },
   {
     "id": "real_buy_034",
@@ -3159,7 +3534,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-basic-02.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -3177,7 +3552,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-basic-02.png",
+      "/images/user-apartment-basic-01.png"
+    ]
   },
   {
     "id": "real_buy_035",
@@ -3204,7 +3583,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-premium-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3222,7 +3601,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-premium-01.png",
+      "/images/real_rent_001-bedroom.png",
+      "/images/real_rent_001-kitchen.png",
+      "/images/real_rent_001-balcony.png"
+    ]
   },
   {
     "id": "real_buy_036",
@@ -3249,7 +3634,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3267,7 +3652,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior-2.png",
+      "/images/user-condo-exterior-01.png"
+    ]
   },
   {
     "id": "real_buy_037",
@@ -3294,7 +3683,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-hallway-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3312,7 +3701,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-hallway-01.png",
+      "/images/user-apartment-empty-02.png"
+    ]
   },
   {
     "id": "real_buy_038",
@@ -3357,7 +3750,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_039",
@@ -3384,7 +3783,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-2.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -3401,7 +3800,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-2.png",
+      "/images/house-listing-1.png",
+      "/images/house-listing-3.png"
+    ]
   },
   {
     "id": "real_land_020",
@@ -3428,7 +3832,13 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_buy_040",
@@ -3455,7 +3865,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-interior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3473,7 +3883,12 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-interior-2.png",
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png"
+    ]
   },
   {
     "id": "real_buy_041",
@@ -3517,7 +3932,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_042",
@@ -3544,7 +3965,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-premium-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3562,7 +3983,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-premium-01.png",
+      "/images/real_rent_001-bedroom.png",
+      "/images/real_rent_001-kitchen.png",
+      "/images/real_rent_001-balcony.png"
+    ]
   },
   {
     "id": "real_buy_043",
@@ -3589,7 +4016,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-5.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -3607,7 +4034,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-5.png",
+      "/images/house-listing-4.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_land_021",
@@ -3638,7 +4071,12 @@
     "syntheticFields": [
       "areaSqft"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-sunset.png"
+    ]
   },
   {
     "id": "real_land_022",
@@ -3665,7 +4103,12 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/land-sunset.png",
+    "images": [
+      "/images/land-sunset.png",
+      "/images/land-roadside.png",
+      "/images/myanmar-land-suburban-2.png"
+    ]
   },
   {
     "id": "real_buy_044",
@@ -3692,7 +4135,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-house-exterior.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3709,7 +4152,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-house-exterior.png",
+      "/images/myanmar-house-large-2.png"
+    ]
   },
   {
     "id": "real_buy_045",
@@ -3736,7 +4183,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-condo-interior-02.png",
     "reliableElectricity": false,
     "syntheticFields": [
       "airConditioning",
@@ -3752,7 +4199,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-condo-interior-02.png",
+      "/images/user-condo-bedroom-01.png"
+    ]
   },
   {
     "id": "real_buy_046",
@@ -3779,7 +4230,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-lived-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3796,7 +4247,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-lived-01.png",
+      "/images/user-house-interior-modern-01.png"
+    ]
   },
   {
     "id": "real_land_023",
@@ -3823,7 +4278,13 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/land-roadside.png"
+    "imageUrl": "/images/myanmar-land-suburban-2.png",
+    "images": [
+      "/images/myanmar-land-suburban-2.png",
+      "/images/land-roadside.png",
+      "/images/land-sunset.png",
+      "/images/myanmar-vacant-land.png"
+    ]
   },
   {
     "id": "real_buy_047",
@@ -3850,7 +4311,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/shared-apartment.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3868,7 +4329,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/shared-apartment.png",
+      "/images/one-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png"
+    ]
   },
   {
     "id": "real_buy_048",
@@ -3895,7 +4362,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-4.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -3913,7 +4380,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_buy_049",
@@ -3958,7 +4431,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_050",
@@ -3985,7 +4464,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -4003,7 +4482,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior-2.png",
+      "/images/user-condo-exterior-01.png"
+    ]
   },
   {
     "id": "real_buy_051",
@@ -4030,7 +4513,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/apartment-bedroom.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -4048,7 +4531,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/one-bedroom.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_052",
@@ -4092,7 +4581,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/two-bedroom.png",
+      "/images/apartment-bedroom.png",
+      "/images/apartment-kitchen.png",
+      "/images/shared-apartment.png"
+    ]
   },
   {
     "id": "real_buy_053",
@@ -4119,7 +4614,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-apartment-empty-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -4136,7 +4631,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-apartment-empty-01.png",
+      "/images/user-apartment-room-modern-01.png"
+    ]
   },
   {
     "id": "real_buy_054",
@@ -4163,7 +4662,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/myanmar-condo-exterior-2.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -4180,7 +4679,11 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/myanmar-condo-exterior-2.png",
+      "/images/user-condo-exterior-01.png"
+    ]
   },
   {
     "id": "real_buy_055",
@@ -4207,7 +4710,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/house-listing-4.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -4225,7 +4728,13 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/house-listing-4.png",
+      "/images/house-listing-5.png",
+      "/images/house-listing-6.png",
+      "/images/house-listing-7.png"
+    ]
   },
   {
     "id": "real_buy_056",
@@ -4252,7 +4761,7 @@
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
     "availabilityStatus": "unverified",
-    "imageUrl": "/images/two-bedroom.png",
+    "imageUrl": "/images/user-house-interior-modern-01.png",
     "reliableElectricity": true,
     "syntheticFields": [
       "airConditioning",
@@ -4270,6 +4779,10 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "images": [
+      "/images/user-house-interior-modern-01.png",
+      "/images/user-house-interior-lived-01.png"
+    ]
   }
 ]

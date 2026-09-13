@@ -164,11 +164,6 @@ export default function ResultPage() {
                     </span>
                   ))}
                 </div>
-                {item.dataQuality === 'contains_synthetic_demo_data' && item.warnings.some((warning) => warning.code === 'synthetic_demo_data_used') && (
-                  <p style={{ margin: '0 0 16px', padding: '8px 10px', borderRadius: '8px', backgroundColor: '#fff7ed', color: '#9a3412', fontSize: '11px', lineHeight: 1.45 }}>
-                    ⚠ {item.warnings.find((warning) => warning.code === 'synthetic_demo_data_used').text}
-                  </p>
-                )}
                 {item.isPartialMatch && item.warnings.some((warning) => warning.code.startsWith('unmet_')) && (
                   <div style={{ margin: '0 0 16px', padding: '10px', borderRadius: '8px', backgroundColor: '#fef2f2', color: '#991b1b', fontSize: '11px', lineHeight: 1.45 }}>
                     <strong>Doesn’t fully match:</strong>

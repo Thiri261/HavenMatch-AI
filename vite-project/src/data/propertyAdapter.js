@@ -24,6 +24,9 @@ export function propertyToListing(property) {
   const township = displayWords(property.township) || 'Township not stated'
   const type = displayWords(property.propertyType) || (purpose === 'Land' ? 'Land' : 'Property')
   const image = property.imageUrl || (purpose === 'Land' ? '/images/land-roadside.png' : '/images/two-bedroom.png')
+  const images = Array.isArray(property.images) && property.images.length > 0
+    ? property.images
+    : [image]
   const source = property.sourceSite || 'the source website'
   const features = FEATURE_FIELDS.filter(([key]) => property[key] === true).map(([, label]) => label)
 
@@ -41,7 +44,7 @@ export function propertyToListing(property) {
     type,
     built: null,
     image,
-    images: [image],
+    images,
     description: `This listing was imported from ${source}. Verify its current availability and any details not stated here with the source website.`,
     features,
     sourceUrl: property.sourceUrl || null,

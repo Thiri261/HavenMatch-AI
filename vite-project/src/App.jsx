@@ -13,6 +13,7 @@ import ResultPage from './Pages/ResultPage'
 import BrowseHomesPage from './Pages/BrowseHomesPage'
 import DashboardPage from './Pages/DashboardPage'
 import ListingDetailPage from './Pages/ListingDetailPage'
+import AdminPage from './Pages/AdminPage'
 import Footer from './components/Footer'
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
     if (window.location.hash.startsWith('#loading')) return 'loading'
     if (window.location.hash.startsWith('#result')) return 'result'
     if (window.location.hash.startsWith('#browse')) return 'browse'
+    if (window.location.hash.startsWith('#admin')) return 'admin'
     if (window.location.hash.startsWith('#dashboard')) return 'dashboard'
     if (window.location.hash.startsWith('#listing/')) return 'listing'
     if (window.location.hash.startsWith('#land')) return 'matching'
@@ -54,6 +56,7 @@ function App() {
   if (page === 'loading') return <><LoadingPage /><Footer /></>
   if (page === 'result') return <><ResultPage /><Footer /></>
   if (page === 'browse') return <><BrowseHomesPage /><Footer /></>
+  if (page === 'admin') return <AdminPage />
   if (page === 'dashboard') return <><DashboardPage /><Footer /></>
   if (page === 'listing') return <><ListingDetailPage /><Footer /></>
 

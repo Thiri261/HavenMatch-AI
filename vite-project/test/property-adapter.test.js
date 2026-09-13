@@ -34,3 +34,18 @@ test('maps only confirmed backend facilities to feature labels', () => {
   assert.equal(listing.address, 'North Okkalapa Township, Yangon')
   assert.deepEqual(listing.features, ['Generator backup'])
 })
+
+test('preserves a property photo gallery while retaining the cover image', () => {
+  const listing = propertyToListing({
+    id: 'real_rent_001', listingType: 'rent', propertyType: 'condominium',
+    imageUrl: '/images/cover.png',
+    images: ['/images/cover.png', '/images/bedroom.png', '/images/kitchen.png'],
+  })
+
+  assert.equal(listing.image, '/images/cover.png')
+  assert.deepEqual(listing.images, [
+    '/images/cover.png',
+    '/images/bedroom.png',
+    '/images/kitchen.png',
+  ])
+})

@@ -7,7 +7,8 @@ import { dirname, extname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 import { getProperties, matchProperties, saveProperties } from './matching.js'
-import { hashPassword, passwordMatches, passwordPolicyMessage, strongPassword } from './passwords.js'
+import { hashPassword, passwordMatches, passwordPolicyMessage, strongPassword, validLoginPassword } from './passwords.js'
+import { validateAvailabilityStatus, validatePropertyInput } from './property-validation.js'
 
 const execFileAsync = promisify(execFile)
 const port = Number(process.env.PORT || 3001)
@@ -41,7 +42,7 @@ function respond(response, status, body, headers = {}) {
     'Cache-Control': 'no-store',
     'Access-Control-Allow-Origin': process.env.FRONTEND_ORIGIN || '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
     ...headers,
   })
   response.end(JSON.stringify(body))
@@ -107,8 +108,28 @@ async function body(request) {
   }
 }
 
-function publicUser(user) { return { id: user.id, name: user.name, email: user.email } }
+function publicUser(user) { return { id: user.id, name: user.name, email: user.email, role: user.role || 'user', status: user.status || 'active', createdAt: user.createdAt, lastLoginAt: user.lastLoginAt || null } }
 function sessionCookie(token, maxAge = 60 * 60 * 24 * 7) { return `havenmatch_session=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=${maxAge}` }
+
+function activeSession(request) {
+  const session = sessions.get(cookies(request).havenmatch_session)
+  if (!session || session.expiresAt < Date.now()) return null
+  return session
+}
+
+function requireUser(request, response) {
+  const session = activeSession(request)
+  if (!session) { respond(response, 401, { message: 'Log in to continue.' }); return null }
+  if (session.user.status === 'suspended') { respond(response, 403, { message: 'This account has been suspended.' }); return null }
+  return session
+}
+
+function requireAdmin(request, response) {
+  const session = activeSession(request)
+  if (!session) { respond(response, 401, { message: 'Log in with an admin account.' }); return null }
+  if (session.user.role !== 'admin') { respond(response, 403, { message: 'Admin access is required.' }); return null }
+  return session
+}
 
 const server = createServer(async (request, response) => {
   try {
@@ -118,7 +139,7 @@ const server = createServer(async (request, response) => {
       response.writeHead(204, {
         'Access-Control-Allow-Origin': process.env.FRONTEND_ORIGIN || '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
       })
       return response.end()
     }
@@ -128,20 +149,54 @@ const server = createServer(async (request, response) => {
     }
 
     if (request.method === 'GET' && url.pathname === '/api/properties') {
+      if (!requireUser(request, response)) return
       const properties = await getProperties()
       const listingType = url.searchParams.get('listingType')
       const township = url.searchParams.get('township')
-      const filtered = properties.filter((property) => (!listingType || property.listingType === listingType) && (!township || property.township === township))
+      const filtered = properties.filter((property) => (property.availabilityStatus || 'available') === 'available' && (!listingType || property.listingType === listingType) && (!township || property.township === township))
       return respond(response, 200, { properties: filtered })
     }
 
+    if (request.method === 'GET' && url.pathname === '/api/admin/properties') {
+      if (!requireAdmin(request, response)) return
+      return respond(response, 200, { properties: await getProperties() })
+    }
+
+    if (request.method === 'GET' && url.pathname === '/api/admin/users') {
+      if (!requireAdmin(request, response)) return
+      const users = await getUsers()
+      return respond(response, 200, { users: users.map(publicUser) })
+    }
+
+    if (request.method === 'PATCH' && url.pathname.startsWith('/api/admin/users/') && url.pathname.endsWith('/status')) {
+      const adminSession = requireAdmin(request, response)
+      if (!adminSession) return
+      const id = decodeURIComponent(url.pathname.slice('/api/admin/users/'.length, -'/status'.length))
+      const input = await body(request)
+      if (!['active', 'suspended'].includes(input.status)) return respond(response, 400, { message: 'User status must be active or suspended.' })
+      const users = await getUsers()
+      const user = users.find((item) => item.id === id)
+      if (!user) return respond(response, 404, { message: 'User not found.' })
+      if (user.id === adminSession.user.id) return respond(response, 400, { message: 'You cannot change your own account status.' })
+      if ((user.role || 'user') === 'admin') return respond(response, 403, { message: 'Admin accounts cannot be suspended here.' })
+      user.status = input.status
+      user.updatedAt = new Date().toISOString()
+      await saveUsers(users)
+      if (input.status === 'suspended') {
+        for (const [token, session] of sessions) if (session.user.id === user.id) sessions.delete(token)
+      }
+      return respond(response, 200, { user: publicUser(user) })
+    }
+
     if (request.method === 'GET' && url.pathname.startsWith('/api/properties/')) {
+      if (!requireUser(request, response)) return
       const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length))
       const property = (await getProperties()).find((item) => item.id === id)
-      return property ? respond(response, 200, { property }) : respond(response, 404, { message: 'Property not found.' })
+      return property && (property.availabilityStatus || 'available') === 'available' ? respond(response, 200, { property }) : respond(response, 404, { message: 'Property not found.' })
     }
 
     if (request.method === 'POST' && url.pathname === '/api/match') {
+      if (!requireUser(request, response)) return
       const input = await body(request)
       const result = await matchProperties(input)
       return respond(response, 200, result)
@@ -152,10 +207,8 @@ const server = createServer(async (request, response) => {
       return respond(response, 404, { message: 'Not found.' })
     }
 
-    if (!url.pathname.startsWith('/api/auth/')) return respond(response, 404, { message: 'Not found.' })
-
     if (request.method === 'GET' && url.pathname === '/api/auth/session') {
-      const session = sessions.get(cookies(request).havenmatch_session)
+      const session = activeSession(request)
       return respond(response, 200, { user: session?.user || null })
     }
 
@@ -165,16 +218,12 @@ const server = createServer(async (request, response) => {
     }
 
     if (request.method === 'POST' && url.pathname === '/api/properties') {
-      const input = await body(request)
-      if (!input.title?.trim() || !Number.isFinite(Number(input.priceMmk)) || Number(input.priceMmk) <= 0) {
-        return respond(response, 400, { message: 'Title and a valid price are required.' })
-      }
+      if (!requireAdmin(request, response)) return
+      const input = validatePropertyInput(await body(request))
       const properties = await getProperties()
       const property = {
         ...input,
         id: `admin_${Date.now()}_${randomBytes(3).toString('hex')}`,
-        title: input.title.trim(),
-        priceMmk: Number(input.priceMmk),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }
@@ -184,11 +233,9 @@ const server = createServer(async (request, response) => {
     }
 
     if (request.method === 'PUT' && url.pathname.startsWith('/api/properties/')) {
+      if (!requireAdmin(request, response)) return
       const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length))
-      const input = await body(request)
-      if (!input.title?.trim() || !Number.isFinite(Number(input.priceMmk)) || Number(input.priceMmk) <= 0) {
-        return respond(response, 400, { message: 'Title and a valid price are required.' })
-      }
+      const input = validatePropertyInput(await body(request))
       const properties = await getProperties()
       const index = properties.findIndex((item) => item.id === id)
       if (index < 0) return respond(response, 404, { message: 'Property not found.' })
@@ -196,8 +243,6 @@ const server = createServer(async (request, response) => {
         ...properties[index],
         ...input,
         id,
-        title: input.title.trim(),
-        priceMmk: Number(input.priceMmk),
         updatedAt: new Date().toISOString(),
       }
       properties[index] = property
@@ -205,7 +250,22 @@ const server = createServer(async (request, response) => {
       return respond(response, 200, { property })
     }
 
+    if (request.method === 'PATCH' && url.pathname.startsWith('/api/properties/') && url.pathname.endsWith('/status')) {
+      if (!requireAdmin(request, response)) return
+      const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length, -'/status'.length))
+      const input = await body(request)
+      const availabilityStatus = validateAvailabilityStatus(input.availabilityStatus)
+      const properties = await getProperties()
+      const property = properties.find((item) => item.id === id)
+      if (!property) return respond(response, 404, { message: 'Property not found.' })
+      property.availabilityStatus = availabilityStatus
+      property.updatedAt = new Date().toISOString()
+      await saveProperties(properties)
+      return respond(response, 200, { property })
+    }
+
     if (request.method === 'DELETE' && url.pathname.startsWith('/api/properties/')) {
+      if (!requireAdmin(request, response)) return
       const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length))
       const properties = await getProperties()
       const filtered = properties.filter((item) => item.id !== id)
@@ -213,6 +273,8 @@ const server = createServer(async (request, response) => {
       await saveProperties(filtered)
       return respond(response, 200, { deleted: true })
     }
+
+    if (!url.pathname.startsWith('/api/auth/')) return respond(response, 404, { message: 'Not found.' })
 
     if (request.method === 'POST' && url.pathname === '/api/auth/change-password') {
       const token = cookies(request).havenmatch_session
@@ -245,7 +307,8 @@ const server = createServer(async (request, response) => {
     const email = String(input.email || '').trim().toLowerCase()
     const password = String(input.password || '')
     if (!/^\S+@\S+\.\S+$/.test(email)) return respond(response, 400, { message: 'Enter a valid email address.' })
-    if (!strongPassword.test(password)) return respond(response, 400, { message: passwordPolicyMessage })
+    if (url.pathname === '/api/auth/signup' && !strongPassword.test(password)) return respond(response, 400, { message: passwordPolicyMessage })
+    if (url.pathname === '/api/auth/login' && !validLoginPassword(password)) return respond(response, 400, { message: 'Enter your password.' })
     const users = await getUsers()
     let user = users.find((item) => item.email === email)
 
@@ -253,11 +316,15 @@ const server = createServer(async (request, response) => {
       const name = String(input.name || '').trim()
       if (name.length < 2 || name.length > 80) return respond(response, 400, { message: 'Enter your full name.' })
       if (user) return respond(response, 409, { message: 'An account with this email already exists.' })
-      user = { id: randomBytes(12).toString('hex'), name, email, passwordHash: await hashPassword(password), createdAt: new Date().toISOString() }
+      user = { id: randomBytes(12).toString('hex'), name, email, role: 'user', status: 'active', passwordHash: await hashPassword(password), createdAt: new Date().toISOString(), lastLoginAt: null }
       users.push(user)
       await saveUsers(users)
+      return respond(response, 201, { user: publicUser(user), requiresLogin: true, message: 'Account created. Log in to continue.' })
     } else if (url.pathname === '/api/auth/login') {
       if (!user || !(await passwordMatches(password, user.passwordHash))) return respond(response, 401, { message: 'Incorrect email or password.' })
+      if ((user.status || 'active') === 'suspended') return respond(response, 403, { message: 'This account has been suspended. Contact an administrator.' })
+      user.lastLoginAt = new Date().toISOString()
+      await saveUsers(users)
     } else return respond(response, 404, { message: 'Not found.' })
 
     const token = randomBytes(32).toString('hex')

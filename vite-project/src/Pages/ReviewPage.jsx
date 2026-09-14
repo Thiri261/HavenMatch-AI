@@ -128,20 +128,15 @@ export default function ReviewPage() {
       const response = await fetch('/api/match', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(request) })
       const result = await response.json()
       if (!response.ok) throw new Error(result.message || 'Matching failed.')
-      const previousResult = (() => {
-        try { return JSON.parse(localStorage.getItem('havenmatch-match-results') || 'null') } catch { return null }
-      })()
-      localStorage.setItem('havenmatch-match-results', JSON.stringify(result))
-      const historyKey = session ? `havenmatch-match-history-${session.email}` : 'havenmatch-match-history-guest'
+      const resultKey = `havenmatch-match-results-${session.email}`
+      localStorage.setItem(resultKey, JSON.stringify(result))
+      const historyKey = `havenmatch-match-history-${session.email}`
       const history = (() => {
         try {
           const savedHistory = JSON.parse(localStorage.getItem(historyKey) || '[]')
           return Array.isArray(savedHistory) ? savedHistory : []
         } catch { return [] }
       })()
-      if (!history.length && previousResult?.matches) {
-        history.push({ id: `migrated-${Date.now()}`, completedAt: null, matchCount: previousResult.matches.length, matchMode: previousResult.matchMode || 'exact', result: previousResult })
-      }
       history.unshift({ id: Date.now(), completedAt: new Date().toISOString(), matchCount: result.matches.length, matchMode: result.matchMode || 'exact', result })
       localStorage.setItem(historyKey, JSON.stringify(history.slice(0, 50)))
       window.location.hash = '#result'

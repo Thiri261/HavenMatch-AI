@@ -22,8 +22,12 @@ export default function AuthPage({ mode }) {
       setMessage('Enter a valid email address.')
       return
     }
-    if (!strongPassword.test(password)) {
+    if (isSignUp && !strongPassword.test(password)) {
       setMessage('Password must have at least 8 characters, including an uppercase letter, a number, and a special character.')
+      return
+    }
+    if (!isSignUp && !password) {
+      setMessage('Enter your password.')
       return
     }
     if (isSignUp && (!name.trim() || password !== confirmPassword)) {
@@ -46,11 +50,16 @@ export default function AuthPage({ mode }) {
       }
       if (!response.ok) throw new Error(data?.message || 'The login service is unavailable. Please try again shortly.')
       if (!data?.user) throw new Error('The login service returned an invalid response. Please try again shortly.')
+      if (isSignUp) {
+        localStorage.setItem('havenmatch_auth_message', data.message || 'Account created. Log in to continue.')
+        window.location.assign('#signin')
+        return
+      }
       localStorage.removeItem('havenmatch_auth_message')
       announceAuthChange(data.user)
       const redirect = localStorage.getItem('havenmatch_auth_redirect')
       localStorage.removeItem('havenmatch_auth_redirect')
-      window.location.assign(redirect?.startsWith('#') ? redirect : '#dashboard')
+      window.location.assign(redirect?.startsWith('#') ? redirect : data.user.role === 'admin' ? '#admin' : '#dashboard')
     } catch (error) {
       setMessage(error instanceof TypeError ? 'Unable to connect to the login service. Please try again shortly.' : error.message)
       setSubmitting(false)
@@ -80,7 +89,7 @@ export default function AuthPage({ mode }) {
           <label>
             Password
             <div className="password-field">
-              <input type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignUp ? 'new-password' : 'current-password'} minLength="8" maxLength="128" required />
+              <input type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignUp ? 'new-password' : 'current-password'} minLength={isSignUp ? 8 : 1} maxLength="128" required />
               <button type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? 'Hide' : 'Show'}</button>
             </div>
             {isSignUp && <small className="password-requirements">Use 8+ characters with an uppercase letter, number, and special character.</small>}

@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import listings from '../data/listings'
 import { displayWords, propertyToListing } from '../data/propertyAdapter'
 import { listingAgent as agent } from '../data/agents'
 import useSession from '../hooks/useSession'
@@ -8,7 +7,6 @@ import useSession from '../hooks/useSession'
 const money = new Intl.NumberFormat('en-US')
 export default function ListingDetailPage() {
   const routeId = decodeURIComponent(window.location.hash.split('/')[1] || '')
-  const localListing = useMemo(() => listings.find((item) => String(item.id) === routeId) || null, [routeId])
   const [remoteResult, setRemoteResult] = useState({ routeId: null, state: 'loading', listing: null })
   const { session, loading } = useSession()
   const savedKey = session ? `havenmatch-saved-${session.email}` : null
@@ -18,8 +16,6 @@ export default function ListingDetailPage() {
   const [showPhotos, setShowPhotos] = useState(false)
 
   useEffect(() => {
-    if (localListing) return
-
     const controller = new AbortController()
     fetch(`/api/properties/${encodeURIComponent(routeId)}`, { signal: controller.signal })
       .then(async (response) => {
@@ -35,10 +31,10 @@ export default function ListingDetailPage() {
       })
 
     return () => controller.abort()
-  }, [localListing, routeId])
+  }, [routeId])
 
-  const listing = localListing || (remoteResult.routeId === routeId ? remoteResult.listing : null)
-  const listingState = localListing ? 'ready' : remoteResult.routeId === routeId ? remoteResult.state : 'loading'
+  const listing = remoteResult.routeId === routeId ? remoteResult.listing : null
+  const listingState = remoteResult.routeId === routeId ? remoteResult.state : 'loading'
   const saved = Boolean(savedKey && listing && JSON.parse(localStorage.getItem(savedKey) || '[]').includes(listing.id))
 
   if (listingState !== 'ready' || !listing) {

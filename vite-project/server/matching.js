@@ -7,7 +7,7 @@ import { fileURLToPath } from 'node:url'
 import { calculateMatch, enrichMatch, isPropertyEligibleForIntent, normalizeRequest, validateMatchRequest } from './matching-core.js'
 
 const serverDirectory = dirname(fileURLToPath(import.meta.url))
-const propertiesPath = join(serverDirectory, 'data', 'properties.json')
+const propertiesPath = process.env.PROPERTY_DATA_FILE || join(serverDirectory, 'data', 'properties.json')
 const prologPath = join(serverDirectory, 'prolog', 'engine.pl')
 const SYNTHETIC_DATA_NOTICE = 'Demo-generated property details are used for matching. Verify bedrooms, bathrooms, area, pets, and amenities on the original listing before making a decision.'
 

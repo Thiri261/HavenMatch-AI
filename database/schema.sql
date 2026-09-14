@@ -23,7 +23,8 @@ CREATE TABLE IF NOT EXISTS properties (
     security BOOLEAN NOT NULL DEFAULT FALSE,
     pet_friendly BOOLEAN NOT NULL DEFAULT FALSE,
     image_url TEXT,
-    is_available BOOLEAN NOT NULL DEFAULT TRUE,
+    availability_status VARCHAR(20) NOT NULL DEFAULT 'draft'
+        CHECK (availability_status IN ('draft', 'available', 'unavailable')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

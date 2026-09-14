@@ -1,64 +1,9 @@
-export default function ResultPage() {
-  // AI Matched Property List (၆ ခု ပါဝင်ပါသည်)
-  const fallbackProperties = [
-    {
-      id: 1,
-      title: "Cozy Haven Modern Apartment",
-      location: "Hlaing Township, Yangon",
-      price: "$450 / month",
-      score: "96%",
-      image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=600&q=80",
-      tags: ["Generator Backup", "Pet Friendly", "Wi-Fi Ready", "Near Shops"]
-    },
-    {
-      id: 2,
-      title: "Garden View Residence",
-      location: "Sanchaung Township, Yangon",
-      price: "$500 / month",
-      score: "91%",
-      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=600&q=80",
-      tags: ["Aircon Included", "24/7 Security", "Quiet Residential"]
-    },
-    {
-      id: 3,
-      title: "Skyline Luxury Condominium",
-      location: "Bahan Township, Yangon",
-      price: "$850 / month",
-      score: "89%",
-      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80",
-      tags: ["Swimming Pool", "Gym Access", "City View", "Car Parking"]
-    },
-    {
-      id: 4,
-      title: "Minimalist Loft Studio",
-      location: "Kamayut Township, Yangon",
-      price: "$380 / month",
-      score: "85%",
-      image: "https://images.unsplash.com/photo-1554995207-c18c203602cb?auto=format&fit=crop&w=600&q=80",
-      tags: ["Fully Furnished", "Near Inya Lake", "Balcony"]
-    },
-    {
-      id: 5,
-      title: "Urban Greenery Suite",
-      location: "Yankin Township, Yangon",
-      price: "$620 / month",
-      score: "82%",
-      image: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=600&q=80",
-      tags: ["Lift Included", "High-speed Net", "Modern Kitchen"]
-    },
-    {
-      id: 6,
-      title: "Riverside Sunset View Flat",
-      location: "Ahlone Township, Yangon",
-      price: "$400 / month",
-      score: "78%",
-      image: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80",
-      tags: ["River View", "Quiet Area", "Spacious Living"]
-    }
-  ];
+import useSession from '../hooks/useSession'
 
+export default function ResultPage() {
+  const { session } = useSession()
   const stored = (() => {
-    try { return JSON.parse(localStorage.getItem('havenmatch-match-results') || 'null') } catch { return null }
+    try { return JSON.parse(localStorage.getItem(session ? `havenmatch-match-results-${session.email}` : '') || 'null') } catch { return null }
   })()
   const hasApiResult = stored && Array.isArray(stored.matches)
   const properties = hasApiResult
@@ -74,7 +19,7 @@ export default function ResultPage() {
         dataQuality: item.dataQuality,
         isPartialMatch: item.isPartialMatch === true,
       }))
-    : fallbackProperties
+    : []
 
   return (
     <div style={{ backgroundColor: '#f8fafc', minHeight: '100vh', padding: '40px 20px', fontFamily: 'sans-serif' }}>
@@ -83,9 +28,11 @@ export default function ResultPage() {
       <div style={{ textAlign: 'center', maxWidth: '700px', margin: '0 auto 40px auto' }}>
         <div style={{ fontSize: '28px', marginBottom: '8px' }}>🎉 <b>AI Matched Results</b></div>
         <p style={{ color: '#64748b', fontSize: '15px' }}>
-          {hasApiResult && stored.matchMode === 'closest'
-            ? 'No exact match met every requirement, so these are your highest-scoring closest options.'
-            : 'Based on your preference model, we found top properties matching your criteria.'}
+          {!hasApiResult
+            ? 'Complete the matching questions to generate recommendations for your account.'
+            : stored.matchMode === 'closest'
+              ? 'No exact match met every requirement, so these are your highest-scoring closest options.'
+              : 'Based on your preference model, we found top properties matching your criteria.'}
         </p>
       </div>
 
@@ -97,6 +44,13 @@ export default function ResultPage() {
         maxWidth: '1200px',
         margin: '0 auto'
       }}>
+        {!hasApiResult && (
+          <div style={{ gridColumn: '1 / -1', padding: '44px', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', color: '#475569' }}>
+            <h2 style={{ margin: '0 0 10px', color: '#1e293b' }}>No match result available</h2>
+            <p style={{ margin: '0 0 22px' }}>Start AI matching and answer the questions to see your recommendations.</p>
+            <a href="#matching" style={{ display: 'inline-block', padding: '12px 18px', borderRadius: '10px', background: '#2d4a43', color: '#fff', textDecoration: 'none', fontWeight: 700 }}>Start AI matching</a>
+          </div>
+        )}
         {hasApiResult && properties.length === 0 && (
           <div style={{ gridColumn: '1 / -1', padding: '36px', textAlign: 'center', backgroundColor: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', color: '#475569' }}>
             No properties meet every required preference. Try increasing the budget or relaxing one requirement.

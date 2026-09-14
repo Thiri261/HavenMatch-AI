@@ -13,7 +13,7 @@
     "parking": true,
     "security": false,
     "petFriendly": false,
-    "generator": false,
+    "generator": true,
     "airConditioning": true,
     "reliableWater": true,
     "internetReady": false,
@@ -23,7 +23,7 @@
     "sourceUrl": "https://www.imyanmarhouse.com/en/rent/23178607",
     "sourceSite": "imyanmarhouse.com",
     "fetchedOn": "2026-09-02",
-    "availabilityStatus": "available",
+    "availabilityStatus": "unavailable",
     "imageUrl": "/images/user-condo-interior-premium-01.png",
     "images": [
       "/images/user-condo-interior-premium-01.png",
@@ -47,7 +47,9 @@
       "reliableWater",
       "security"
     ],
-    "hasSyntheticDemoData": true
+    "hasSyntheticDemoData": true,
+    "maxOccupants": null,
+    "updatedAt": "2026-09-14T17:43:14.417Z"
   },
   {
     "id": "real_rent_002",
@@ -705,8 +707,7 @@
       "/images/house-listing-6.png",
       "/images/house-listing-4.png",
       "/images/house-listing-5.png",
-      "/images/house-listing-7.png",
-      "/images/user-condo-interior-01.png"
+      "/images/house-listing-7.png"
     ]
   },
   {
@@ -757,8 +758,7 @@
       "/images/house-listing-7.png",
       "/images/house-listing-4.png",
       "/images/house-listing-5.png",
-      "/images/house-listing-6.png",
-      "/images/user-condo-interior-02.png"
+      "/images/house-listing-6.png"
     ]
   },
   {
@@ -809,8 +809,7 @@
       "/images/user-house-interior-lived-01.png",
       "/images/user-house-interior-modern-01.png",
       "/images/myanmar-house-exterior.png",
-      "/images/apartment-bedroom.png",
-      "/images/real_rent_001-kitchen.png"
+      "/images/apartment-bedroom.png"
     ]
   },
   {
@@ -963,8 +962,7 @@
       "/images/house-listing-5.png",
       "/images/house-listing-4.png",
       "/images/house-listing-6.png",
-      "/images/house-listing-7.png",
-      "/images/listing-living-room-03.png"
+      "/images/house-listing-7.png"
     ]
   },
   {
@@ -1066,8 +1064,7 @@
       "/images/myanmar-house-large-2.png",
       "/images/myanmar-house-exterior.png",
       "/images/listing-bathroom-laundry-01.png",
-      "/images/myanmar-apartment-interior-2.png",
-      "/images/real_rent_001-bedroom.png"
+      "/images/myanmar-apartment-interior-2.png"
     ]
   },
   {
@@ -1872,8 +1869,7 @@
       "/images/house-listing-5.png",
       "/images/house-listing-4.png",
       "/images/house-listing-6.png",
-      "/images/house-listing-7.png",
-      "/images/myanmar-apartment-interior-2.png"
+      "/images/house-listing-7.png"
     ]
   },
   {
@@ -2083,8 +2079,7 @@
       "/images/myanmar-land-suburban-2.png",
       "/images/land-roadside.png",
       "/images/land-sunset.png",
-      "/images/myanmar-vacant-land.png",
-      "/images/listing-land-green-suburban-01.png"
+      "/images/myanmar-vacant-land.png"
     ]
   },
   {
@@ -2496,8 +2491,7 @@
       "/images/house-listing-7.png",
       "/images/house-listing-4.png",
       "/images/house-listing-5.png",
-      "/images/house-listing-6.png",
-      "/images/myanmar-apartment-interior-2.png"
+      "/images/house-listing-6.png"
     ]
   },
   {
@@ -2547,8 +2541,7 @@
       "/images/user-house-interior-lived-01.png",
       "/images/user-house-interior-modern-01.png",
       "/images/house-listing-3.png",
-      "/images/two-bedroom.png",
-      "/images/apartment-kitchen.png"
+      "/images/two-bedroom.png"
     ]
   },
   {
@@ -2598,8 +2591,7 @@
       "/images/house-listing-6.png",
       "/images/house-listing-4.png",
       "/images/house-listing-5.png",
-      "/images/house-listing-7.png",
-      "/images/user-condo-interior-02.png"
+      "/images/house-listing-7.png"
     ]
   },
   {
@@ -2649,8 +2641,7 @@
       "/images/user-house-interior-lived-01.png",
       "/images/user-house-interior-modern-01.png",
       "/images/myanmar-house-exterior.png",
-      "/images/real_rent_001-bedroom.png",
-      "/images/real_rent_001-kitchen.png"
+      "/images/real_rent_001-bedroom.png"
     ]
   },
   {
@@ -2886,8 +2877,7 @@
       "/images/myanmar-land-suburban-2.png",
       "/images/land-roadside.png",
       "/images/land-sunset.png",
-      "/images/myanmar-vacant-land.png",
-      "/images/listing-land-corner-urban-01.png"
+      "/images/myanmar-vacant-land.png"
     ]
   },
   {
@@ -3243,8 +3233,7 @@
       "/images/user-house-interior-lived-01.png",
       "/images/user-house-interior-modern-01.png",
       "/images/house-listing-2.png",
-      "/images/two-bedroom.png",
-      "/images/listing-kitchen-04.png"
+      "/images/two-bedroom.png"
     ]
   },
   {
@@ -3281,8 +3270,7 @@
       "/images/myanmar-land-suburban-2.png",
       "/images/land-roadside.png",
       "/images/land-sunset.png",
-      "/images/myanmar-vacant-land.png",
-      "/images/listing-land-semirural-01.png"
+      "/images/myanmar-vacant-land.png"
     ]
   },
   {
@@ -4137,8 +4125,7 @@
       "/images/house-listing-5.png",
       "/images/house-listing-4.png",
       "/images/house-listing-6.png",
-      "/images/house-listing-7.png",
-      "/images/listing-living-room-01.png"
+      "/images/house-listing-7.png"
     ]
   },
   {
@@ -4355,8 +4342,7 @@
       "/images/user-house-interior-lived-01.png",
       "/images/user-house-interior-modern-01.png",
       "/images/house-listing-3.png",
-      "/images/myanmar-apartment-bedroom.png",
-      "/images/apartment-kitchen.png"
+      "/images/myanmar-apartment-bedroom.png"
     ]
   },
   {
@@ -4845,8 +4831,7 @@
       "/images/house-listing-4.png",
       "/images/house-listing-5.png",
       "/images/house-listing-6.png",
-      "/images/house-listing-7.png",
-      "/images/listing-upstairs-landing-01.png"
+      "/images/house-listing-7.png"
     ]
   },
   {
@@ -4897,8 +4882,7 @@
       "/images/user-house-interior-modern-01.png",
       "/images/user-house-interior-lived-01.png",
       "/images/house-listing-4.png",
-      "/images/real_rent_001-bedroom.png",
-      "/images/listing-kitchen-01.png"
+      "/images/real_rent_001-bedroom.png"
     ]
   }
 ]

@@ -74,6 +74,22 @@ The final percentage is rounded and capped at 100. Budget, township, property ty
 - `GET /api/properties/:id`
 - `POST /api/match`
 
+The MVP admin listing workflow also uses:
+
+- `GET /api/admin/properties`
+- `POST /api/properties`
+- `PUT /api/properties/:id`
+- `PATCH /api/properties/:id/status`
+- `DELETE /api/properties/:id`
+
+The authentication integration must restrict all of these admin and write routes to an authenticated admin. Listings use `draft`, `available`, or `unavailable` status. Only available listings are returned by the public property routes or considered by matching.
+
+## MVP data-storage decision
+
+For the deadline-focused MVP, `server/data/properties.json` is the single property source used by admin management, public browsing, listing details, and AI matching. `server/data/users.json` remains the temporary account store. This avoids adding a database migration while the product workflow is still being completed.
+
+The SQL files in `../database` are a proposed PostgreSQL design, not the running application's data source. Before production use, migrate both accounts and properties to a managed database and keep the existing API contract so the frontend does not need a substantial rewrite.
+
 ## Verification
 
 ```cmd
@@ -95,4 +111,4 @@ The repository includes a Docker deployment that builds the Vite frontend, insta
 3. After deployment, open `/api/health` and confirm it reports `"status":"ok"` and `"prolog":{"status":"available"}`.
 4. Submit a matching request in the website and confirm the `/api/match` response contains `"engine":"prolog"`.
 
-The free Render filesystem is ephemeral. Accounts stored in `server/data/users.json` can reset after a restart or redeploy. Use a managed database or a paid persistent disk before treating the authentication store as production data.
+The free Render filesystem is ephemeral. Accounts stored in `server/data/users.json` and admin listing changes stored in `server/data/properties.json` can reset after a restart or redeploy. The repository's original property file will return on a fresh deployment. Use a managed database or a paid persistent disk before treating either store as production data.

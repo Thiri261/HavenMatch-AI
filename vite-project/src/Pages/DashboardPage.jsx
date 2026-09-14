@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import Header from '../components/Header'
-import listings from '../data/listings'
 import { propertyToListing } from '../data/propertyAdapter'
 import useSession, { announceAuthChange } from '../hooks/useSession'
 
@@ -24,7 +23,7 @@ export default function DashboardPage() {
   const [passwords, setPasswords] = useState({ current: '', next: '', confirm: '' })
   const [accountMessage, setAccountMessage] = useState({ type: '', text: '' })
   const [accountBusy, setAccountBusy] = useState(false)
-  const [availableListings, setAvailableListings] = useState(listings)
+  const [availableListings, setAvailableListings] = useState([])
   const [listingsLoading, setListingsLoading] = useState(true)
   const [listingsError, setListingsError] = useState('')
   const saved = useMemo(() => {
@@ -33,10 +32,7 @@ export default function DashboardPage() {
   }, [savedKey, savedRevision])
   const contactedAgents = session ? readList(`havenmatch-contacted-agents-${session.email}`) : []
   const completedMatches = session ? readList(`havenmatch-match-history-${session.email}`) : []
-  const hasLatestMatch = (() => {
-    try { return Array.isArray(JSON.parse(localStorage.getItem('havenmatch-match-results') || 'null')?.matches) } catch { return false }
-  })()
-  const completedMatchCount = Math.max(completedMatches.length, hasLatestMatch ? 1 : 0)
+  const completedMatchCount = completedMatches.length
   const favourites = useMemo(() => {
     const savedIds = new Set(saved.map(String))
     return availableListings.filter((listing) => savedIds.has(String(listing.id)))
@@ -56,9 +52,7 @@ export default function DashboardPage() {
         const result = await response.json()
         if (!response.ok) throw new Error(result.message || 'Unable to load properties.')
         if (!Array.isArray(result.properties)) throw new Error('Invalid property response.')
-        const remoteListings = result.properties.map(propertyToListing)
-        const remoteIds = new Set(remoteListings.map((listing) => String(listing.id)))
-        setAvailableListings([...remoteListings, ...listings.filter((listing) => !remoteIds.has(String(listing.id)))])
+        setAvailableListings(result.properties.map(propertyToListing))
       } catch (error) {
         if (error.name !== 'AbortError') setListingsError('Some saved listings could not be refreshed. Please try again later.')
       } finally {
@@ -82,7 +76,7 @@ export default function DashboardPage() {
   }
 
   const openCompletedMatch = (match) => {
-    if (match.result?.matches) localStorage.setItem('havenmatch-match-results', JSON.stringify(match.result))
+    if (match.result?.matches) localStorage.setItem(`havenmatch-match-results-${session.email}`, JSON.stringify(match.result))
     window.location.assign('#result')
   }
 
@@ -134,7 +128,7 @@ export default function DashboardPage() {
             {listingsError && <p className="dashboard-load-message" role="alert">{listingsError}</p>}
           </section>
           <section className="dashboard-favourites dashboard-matches" id="dashboard-matches"><div className="dashboard-section-title"><div><h2>Your completed AI matches</h2><p>Reopen recommendations from your previous matching sessions.</p></div><a href="#matching">Start a new match</a></div>
-            {completedMatches.length ? <div className="completed-match-list">{completedMatches.map((match, index) => <article key={match.id}><div><strong>{match.result?.request?.intent ? `${match.result.request.intent.charAt(0).toUpperCase()}${match.result.request.intent.slice(1)} match` : `AI match ${completedMatches.length - index}`}</strong><span>{match.matchCount} propert{match.matchCount === 1 ? 'y' : 'ies'} · {match.completedAt ? new Date(match.completedAt).toLocaleString() : 'Previous session'}</span></div><button type="button" onClick={() => openCompletedMatch(match)}>View results</button></article>)}</div> : hasLatestMatch ? <div className="dashboard-empty dashboard-empty-compact"><h3>Your latest AI match is ready</h3><p>This result was completed before match history was enabled.</p><a href="#result">View latest result</a></div> : <div className="dashboard-empty dashboard-empty-compact"><h3>No completed AI matches yet</h3><p>Complete the matching questions to see your recommendations here.</p><a href="#matching">Start AI matching</a></div>}
+            {completedMatches.length ? <div className="completed-match-list">{completedMatches.map((match, index) => <article key={match.id}><div><strong>{match.result?.request?.intent ? `${match.result.request.intent.charAt(0).toUpperCase()}${match.result.request.intent.slice(1)} match` : `AI match ${completedMatches.length - index}`}</strong><span>{match.matchCount} propert{match.matchCount === 1 ? 'y' : 'ies'} · {match.completedAt ? new Date(match.completedAt).toLocaleString() : 'Previous session'}</span></div><button type="button" onClick={() => openCompletedMatch(match)}>View results</button></article>)}</div> : <div className="dashboard-empty dashboard-empty-compact"><h3>No completed AI matches yet</h3><p>Complete the matching questions to see your recommendations here.</p><a href="#matching">Start AI matching</a></div>}
           </section>
           <section className="dashboard-favourites dashboard-agents" id="dashboard-agents"><div className="dashboard-section-title"><div><h2>Your contacted agents</h2><p>Agents you contacted while viewing properties.</p></div></div>
             {contactedAgents.length ? <div className="contacted-agent-list">{contactedAgents.map((contact) => <article key={`${contact.id}-${contact.listingId}`}><div><strong>{contact.name}</strong><span>Regarding <a href={`#listing/${contact.listingId}`}>{contact.listingTitle}</a></span><small>{contact.address}</small></div><a href={`mailto:${contact.email}?subject=${encodeURIComponent(`Regarding ${contact.listingTitle}`)}`}>Email</a></article>)}</div> : <div className="dashboard-empty dashboard-empty-compact"><span>♙</span><h3>No contacted agents yet</h3><p>Agent details you view will be saved here.</p><a href="#browse/rent">Browse properties</a></div>}

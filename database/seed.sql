@@ -87,3 +87,7 @@ INSERT INTO properties (
     )
 ON CONFLICT (listing_code) DO NOTHING;
 
+-- Demo listings are ready to appear in public browse and matching results.
+UPDATE properties
+SET availability_status = 'available'
+WHERE listing_code IN ('RENT-001', 'RENT-002', 'RENT-003', 'BUY-001', 'BUY-002', 'LAND-001', 'LAND-002', 'LAND-003');

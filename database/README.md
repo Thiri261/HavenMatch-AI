@@ -1,6 +1,12 @@
 # HavenMatch AI database
 
-This folder contains the first simple database design for HavenMatch AI. It is independent of the backend, so the team can review and improve the data model before connecting an API.
+This folder contains the first simple database design for HavenMatch AI. It is independent of the running backend, so the team can review and improve the data model before connecting an API.
+
+## Current MVP decision
+
+The deadline-focused MVP currently uses `vite-project/server/data/properties.json` as its single property store. Admin changes, public browsing, listing details, and AI matching all use that file through the backend API. These SQL files are retained as the proposed future PostgreSQL migration and are not executed by the application today.
+
+Do not update both the JSON file and PostgreSQL independently in the deployed MVP; that would create two conflicting sources of truth. When the team schedules the migration, replace the backend storage functions with PostgreSQL access, migrate the complete JSON property fields and galleries, and then make PostgreSQL the only writable property store.
 
 ## Files
 
@@ -45,4 +51,3 @@ ORDER BY listing_type, price_mmk;
 This first version deliberately uses one table. It does not yet include users, saved properties, enquiries, questionnaire answers, or match history. Images are represented by a single URL. Add separate image and facility tables only when the application needs multiple images or a configurable list of facilities.
 
 The seed listings are fictional and must not be presented as real properties. Real data should be checked by the team before it is published.
-

@@ -14,6 +14,7 @@ import DashboardPage from './Pages/DashboardPage'
 import ListingDetailPage from './Pages/ListingDetailPage'
 import AdminPage from './Pages/AdminPage'
 import Footer from './components/Footer'
+import useSession from './hooks/useSession'
 
 function App() {
   const getPage = () => {
@@ -33,6 +34,7 @@ function App() {
   }
 
   const [page, setPage] = useState(getPage)
+  const { session, loading: sessionLoading } = useSession()
 
   useEffect(() => {
     const handleHashChange = () => {
@@ -51,6 +53,23 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const isPublicPage = page === 'home' || page === 'signin' || page === 'signup'
+    if (sessionLoading || isPublicPage || session) return
+    localStorage.setItem('havenmatch_auth_redirect', window.location.hash || '#dashboard')
+    localStorage.setItem('havenmatch_auth_message', 'Log in to continue to that page.')
+    window.location.assign('#signin')
+  }, [page, session, sessionLoading])
+
+  const isProtectedPage = page !== 'home' && page !== 'signin' && page !== 'signup'
+  if (isProtectedPage && (sessionLoading || !session)) {
+    return <div className="site-shell"><Header /><main><section className="auth-page"><div className="auth-card"><p>Checking your account…</p></div></section></main><Footer /></div>
+  }
+
+  if (page === 'admin' && session.role !== 'admin') {
+    return <div className="site-shell"><Header /><main><section className="auth-page"><div className="auth-card"><h2>Access denied</h2><p className="auth-intro">An administrator account is required to open this page.</p><a className="auth-submit" href="#dashboard">Go to my dashboard</a></div></section></main><Footer /></div>
+  }
+
   if (page === 'review') return <><ReviewPage /><Footer /></>
   if (page === 'loading') return <><LoadingPage /><Footer /></>
   if (page === 'result') return <><ResultPage /><Footer /></>
@@ -63,7 +82,7 @@ function App() {
     return (
       <div className="site-shell">
         <Header />
-        <main><AuthPage mode={page} /></main>
+        <main><AuthPage key={page} mode={page} /></main>
         <Footer />
       </div>
     )
@@ -79,7 +98,7 @@ function App() {
       <main>
         <Hero />
         <PropertyActions />
-        <FeaturedListings />
+        {session && <FeaturedListings />}
       </main>
       <Footer />
     </div>

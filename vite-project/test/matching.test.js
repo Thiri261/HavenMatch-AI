@@ -49,6 +49,8 @@ test('keeps home and land candidates in their intended search categories', () =>
   assert.equal(isPropertyEligibleForIntent(saleApartment, 'buy'), true)
   assert.equal(isPropertyEligibleForIntent(saleLand, 'land'), true)
   assert.equal(isPropertyEligibleForIntent(saleLand, 'buy'), false)
+  assert.equal(isPropertyEligibleForIntent({ ...rentalHouse, availabilityStatus: 'draft' }, 'rent'), false)
+  assert.equal(isPropertyEligibleForIntent({ ...rentalHouse, availabilityStatus: 'unavailable' }, 'rent'), false)
 })
 
 test('normalizes matched points against the selected criteria', () => {

@@ -88,6 +88,7 @@ export class MatchValidationError extends Error {
 
 export function isPropertyEligibleForIntent(property, intent) {
   if (!property || property.listingType !== intent) return false
+  if ((property.availabilityStatus || 'available') !== 'available') return false
   if (intent === 'land') return property.propertyType === 'vacant_land'
   if (intent === 'rent') return RENT_HOME_TYPES.has(property.propertyType)
   if (intent === 'buy') return BUY_HOME_TYPES.has(property.propertyType)

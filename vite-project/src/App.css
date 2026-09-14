@@ -28,6 +28,14 @@
 .header-nav a.header-login::after { right: 16px; bottom: 5px; left: 16px; background: var(--green); }
 .account-menu { display: flex; align-items: center; gap: 12px; color: var(--navy); font-weight: 700; }
 .account-menu button { padding: 8px 12px; border: 1px solid #ccd8d5; border-radius: 7px; color: var(--navy); background: #fff; cursor: pointer; }
+.account-dropdown { position: relative; display: none; color: var(--navy); }
+.account-dropdown summary { min-height: 42px; padding: 0 13px; display: flex; align-items: center; gap: 7px; border: 1px solid #ccd8d5; border-radius: 8px; background: #fff; font-weight: 750; list-style: none; cursor: pointer; }
+.account-dropdown summary::-webkit-details-marker { display: none; }
+.account-dropdown[open] summary { border-color: var(--green); }
+.account-dropdown > div { position: absolute; top: calc(100% + 8px); right: 0; width: 190px; padding: 8px; display: grid; gap: 3px; border: 1px solid #d8e1de; border-radius: 10px; background: #fff; box-shadow: 0 14px 35px rgba(6, 45, 59, .16); }
+.account-dropdown strong { padding: 8px 10px; color: #58717a; font-size: 13px; }
+.account-dropdown a, .account-dropdown button { width: 100%; padding: 10px; border: 0; border-radius: 7px; color: var(--navy); background: transparent; font: inherit; font-size: 14px; font-weight: 700; text-align: left; text-decoration: none; cursor: pointer; }
+.account-dropdown a:hover, .account-dropdown button:hover { color: var(--green); background: #f1f8f3; }
 .button { min-height: 54px; display: inline-flex; align-items: center; justify-content: center; padding: 0 30px; border: 2px solid transparent; border-radius: 9px; text-decoration: none; font-size: 18px; font-weight: 700; transition: transform 160ms ease, box-shadow 160ms ease, background 160ms ease; }
 .button:hover { transform: translateY(-2px); }
 .button-primary { color: #fff !important; background: var(--coral); box-shadow: 0 8px 20px rgba(255, 88, 56, 0.15); }
@@ -991,7 +999,8 @@
 }
 
 @media (max-width: 920px) {
-  .account-menu > a { display: none; }
+  .account-menu { display: none; }
+  .account-dropdown { display: block; }
 }
 
 @media (max-width: 720px) {
@@ -1004,6 +1013,10 @@
 @media (max-width: 560px) {
   .ai-match-overlay { padding: 0; place-items: stretch; }
   .ai-match-card { width: 100%; max-height: 100vh; min-height: 100vh; border: 0; border-radius: 0; }
+}
+
+@media (max-width: 380px) {
+  .brand > span { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {

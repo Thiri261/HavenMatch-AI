@@ -42,11 +42,23 @@ function Header() {
         </a>
         <nav className="header-nav header-nav-right" aria-label="Account navigation">
           {session ? (
-            <div className="account-menu">
-              <span>Hi, {session.name.split(' ')[0]}</span>
-              <a href="#dashboard" {...navProps('dashboard')}>My dashboard</a>
-              <button type="button" onClick={signOut}>Sign out</button>
-            </div>
+            <>
+              <div className="account-menu">
+                <span>Hi, {session.name.split(' ')[0]}</span>
+                <a href="#dashboard" {...navProps('dashboard')}>My dashboard</a>
+                {session.role === 'admin' && <a href="#admin" {...navProps('admin')}>Admin dashboard</a>}
+                <button type="button" onClick={signOut}>Sign out</button>
+              </div>
+              <details className="account-dropdown">
+                <summary>Account <span aria-hidden="true">⌄</span></summary>
+                <div>
+                  <strong>Hi, {session.name.split(' ')[0]}</strong>
+                  <a href="#dashboard" {...navProps('dashboard')}>My dashboard</a>
+                  {session.role === 'admin' && <a href="#admin" {...navProps('admin')}>Admin dashboard</a>}
+                  <button type="button" onClick={signOut}>Sign out</button>
+                </div>
+              </details>
+            </>
           ) : (
             <>
               <a href="#signup" {...navProps('signup')}>Sign up</a>

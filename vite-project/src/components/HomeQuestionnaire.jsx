@@ -54,7 +54,7 @@ function HomeChoiceButtons({ label, options, value, onChange }) {
   )
 }
 
-function HousingLocationStep({ area, commuteTime, importantPlace, purpose, setArea, setCommuteTime, setImportantPlace, setSide, setTownship, setWalkingTime, side, township, walkingTime }) {
+function HousingLocationStep({ commuteTime, purpose, setCommuteTime, setSide, setTownship, setWalkingTime, side, township, walkingTime }) {
   const sides = [['north', 'North'], ['south', 'South'], ['east', 'East'], ['west', 'West'], ['central', 'Central'], ['any', 'Doesn’t matter']]
   const timeOptions = [['10', 'Up to 10 minutes'], ['20', 'Up to 20 minutes'], ['30', 'Up to 30 minutes'], ['any', 'Doesn’t matter']]
 
@@ -70,14 +70,12 @@ function HousingLocationStep({ area, commuteTime, importantPlace, purpose, setAr
         <h2>Location preferences</h2>
         <div className="housing-location-fields">
           <label><span>Preferred township</span><select value={township} onChange={(event) => setTownship(event.target.value)}><option value="">Search or select a township</option><option value="ahlone">Ahlone</option><option value="bahan">Bahan</option><option value="hlaing">Hlaing</option><option value="kamayut">Kamayut</option><option value="mayangone">Mayangone</option><option value="north-dagon">North Dagon</option><option value="south-okkalapa">South Okkalapa</option><option value="thanlyin">Thanlyin</option></select><small>You can choose the closest match.</small></label>
-          <label><span>Preferred ward or area (optional)</span><input value={area} onChange={(event) => setArea(event.target.value)} placeholder="Search or enter an area" /></label>
         </div>
         <HomeChoiceButtons label="Preferred side of Yangon" options={sides} value={side} onChange={setSide} />
       </section>
 
       <section className="rental-card housing-location-card housing-commute-card">
         <h2>Commute preferences</h2>
-        <label className="housing-important-place"><span>Important place</span><input value={importantPlace} onChange={(event) => setImportantPlace(event.target.value)} placeholder="Workplace, school, university, or another place" /></label>
         <HomeChoiceButtons label="Maximum commute time" options={timeOptions} value={commuteTime} onChange={setCommuteTime} />
         <HomeChoiceButtons label="Walking time to YBS bus stop" options={timeOptions} value={walkingTime} onChange={setWalkingTime} />
       </section>
@@ -222,9 +220,7 @@ function HomeQuestionnaire() {
   const [monthlyPayment, setMonthlyPayment] = useState(() => localStorage.getItem(`${storagePrefix}-monthly-payment`) || '')
   const [accessibility, setAccessibility] = useState(() => localStorage.getItem(`${storagePrefix}-accessibility`) || '')
   const [township, setTownship] = useState(() => localStorage.getItem(`${storagePrefix}-township`) || '')
-  const [area, setArea] = useState(() => localStorage.getItem(`${storagePrefix}-area`) || '')
   const [side, setSide] = useState(() => localStorage.getItem(`${storagePrefix}-side`) || '')
-  const [importantPlace, setImportantPlace] = useState(() => localStorage.getItem(`${storagePrefix}-important-place`) || '')
   const [commuteTime, setCommuteTime] = useState(() => localStorage.getItem(`${storagePrefix}-commute-time`) || '')
   const [walkingTime, setWalkingTime] = useState(() => localStorage.getItem(`${storagePrefix}-walking-time`) || '')
   const [facilities, setFacilities] = useState(() => {
@@ -253,14 +249,12 @@ function HomeQuestionnaire() {
     localStorage.setItem(`${storagePrefix}-monthly-payment`, monthlyPayment)
     localStorage.setItem(`${storagePrefix}-accessibility`, accessibility)
     localStorage.setItem(`${storagePrefix}-township`, township)
-    localStorage.setItem(`${storagePrefix}-area`, area)
     localStorage.setItem(`${storagePrefix}-side`, side)
-    localStorage.setItem(`${storagePrefix}-important-place`, importantPlace)
     localStorage.setItem(`${storagePrefix}-commute-time`, commuteTime)
     localStorage.setItem(`${storagePrefix}-walking-time`, walkingTime)
     localStorage.setItem(`${storagePrefix}-facilities`, JSON.stringify(facilities))
     localStorage.setItem(`${storagePrefix}-area-preference`, areaPreference)
-  }, [storagePrefix, homeType, floor, bedrooms, bathrooms, roomSize, people, pets, payment, purchaseBudget, downPayment, monthlyPayment, accessibility, township, area, side, importantPlace, commuteTime, walkingTime, facilities, areaPreference])
+  }, [storagePrefix, homeType, floor, bedrooms, bathrooms, roomSize, people, pets, payment, purchaseBudget, downPayment, monthlyPayment, accessibility, township, side, commuteTime, walkingTime, facilities, areaPreference])
   const chooseHomeType = (value) => {
     setHomeType(value)
     if (value === 'house') setFloor('')
@@ -346,7 +340,7 @@ function HomeQuestionnaire() {
           ) : currentStep === 2 ? (
             <HousingBudgetStep accessibility={accessibility} downPayment={downPayment} monthlyPayment={monthlyPayment} payment={payment} people={people} pets={pets} purchaseBudget={purchaseBudget} setAccessibility={setAccessibility} setDownPayment={setDownPayment} setMonthlyPayment={setMonthlyPayment} setPayment={setPayment} setPeople={setPeople} setPets={setPets} setPurchaseBudget={setPurchaseBudget} />
           ) : currentStep === 3 ? (
-            <HousingLocationStep area={area} commuteTime={commuteTime} importantPlace={importantPlace} purpose={purpose} setArea={setArea} setCommuteTime={setCommuteTime} setImportantPlace={setImportantPlace} setSide={setSide} setTownship={setTownship} setWalkingTime={setWalkingTime} side={side} township={township} walkingTime={walkingTime} />
+            <HousingLocationStep commuteTime={commuteTime} purpose={purpose} setCommuteTime={setCommuteTime} setSide={setSide} setTownship={setTownship} setWalkingTime={setWalkingTime} side={side} township={township} walkingTime={walkingTime} />
           ) : (
             <HousingFacilitiesStep areaPreference={areaPreference} facilities={facilities} purpose={purpose} setAreaPreference={setAreaPreference} setFacilities={setFacilities} />
           )}

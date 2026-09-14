@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import './App.css'
-import BenefitsBar from './components/BenefitsBar'
 import Header from './components/Header'
 import Hero from './components/Hero'
 import PropertyActions from './components/PropertyActions'
@@ -79,7 +78,6 @@ function App() {
       <Header />
       <main>
         <Hero />
-        <BenefitsBar />
         <PropertyActions />
         <FeaturedListings />
       </main>

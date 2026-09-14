@@ -6,7 +6,7 @@ import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, extname, join, resolve, sep } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
-import { getProperties, matchProperties } from './matching.js'
+import { getProperties, matchProperties, saveProperties } from './matching.js'
 import { hashPassword, passwordMatches, passwordPolicyMessage, strongPassword } from './passwords.js'
 
 const execFileAsync = promisify(execFile)
@@ -41,7 +41,7 @@ function respond(response, status, body, headers = {}) {
     'Cache-Control': 'no-store',
     'Access-Control-Allow-Origin': process.env.FRONTEND_ORIGIN || '*',
     'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
     ...headers,
   })
   response.end(JSON.stringify(body))
@@ -118,7 +118,7 @@ const server = createServer(async (request, response) => {
       response.writeHead(204, {
         'Access-Control-Allow-Origin': process.env.FRONTEND_ORIGIN || '*',
         'Access-Control-Allow-Headers': 'Content-Type',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
       })
       return response.end()
     }
@@ -162,6 +162,56 @@ const server = createServer(async (request, response) => {
     if (request.method === 'POST' && url.pathname === '/api/auth/logout') {
       sessions.delete(cookies(request).havenmatch_session)
       return respond(response, 200, { user: null }, { 'Set-Cookie': sessionCookie('', 0) })
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/properties') {
+      const input = await body(request)
+      if (!input.title?.trim() || !Number.isFinite(Number(input.priceMmk)) || Number(input.priceMmk) <= 0) {
+        return respond(response, 400, { message: 'Title and a valid price are required.' })
+      }
+      const properties = await getProperties()
+      const property = {
+        ...input,
+        id: `admin_${Date.now()}_${randomBytes(3).toString('hex')}`,
+        title: input.title.trim(),
+        priceMmk: Number(input.priceMmk),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      properties.unshift(property)
+      await saveProperties(properties)
+      return respond(response, 201, { property })
+    }
+
+    if (request.method === 'PUT' && url.pathname.startsWith('/api/properties/')) {
+      const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length))
+      const input = await body(request)
+      if (!input.title?.trim() || !Number.isFinite(Number(input.priceMmk)) || Number(input.priceMmk) <= 0) {
+        return respond(response, 400, { message: 'Title and a valid price are required.' })
+      }
+      const properties = await getProperties()
+      const index = properties.findIndex((item) => item.id === id)
+      if (index < 0) return respond(response, 404, { message: 'Property not found.' })
+      const property = {
+        ...properties[index],
+        ...input,
+        id,
+        title: input.title.trim(),
+        priceMmk: Number(input.priceMmk),
+        updatedAt: new Date().toISOString(),
+      }
+      properties[index] = property
+      await saveProperties(properties)
+      return respond(response, 200, { property })
+    }
+
+    if (request.method === 'DELETE' && url.pathname.startsWith('/api/properties/')) {
+      const id = decodeURIComponent(url.pathname.slice('/api/properties/'.length))
+      const properties = await getProperties()
+      const filtered = properties.filter((item) => item.id !== id)
+      if (filtered.length === properties.length) return respond(response, 404, { message: 'Property not found.' })
+      await saveProperties(filtered)
+      return respond(response, 200, { deleted: true })
     }
 
     if (request.method === 'POST' && url.pathname === '/api/auth/change-password') {

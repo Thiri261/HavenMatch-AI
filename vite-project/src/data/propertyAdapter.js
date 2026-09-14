@@ -39,6 +39,7 @@ export function propertyToListing(property) {
     price: property.priceMmk,
     beds: Number.isFinite(property.bedrooms) ? property.bedrooms : null,
     baths: Number.isFinite(property.bathrooms) ? property.bathrooms : null,
+    maxOccupants: Number.isFinite(property.maxOccupants) ? property.maxOccupants : Number.isFinite(property.bedrooms) && property.bedrooms > 0 ? property.bedrooms * 2 : null,
     sqft: Number.isFinite(property.areaSqft) ? property.areaSqft : null,
     floor: Number.isFinite(property.floor) ? property.floor : null,
     type,
@@ -50,7 +51,11 @@ export function propertyToListing(property) {
     sourceUrl: property.sourceUrl || null,
     sourceSite: property.sourceSite || null,
     fetchedOn: property.fetchedOn || null,
-    availabilityStatus: property.availabilityStatus || 'unverified',
+    availabilityStatus: property.availabilityStatus || 'available',
+    commute: {
+      nearBusStop: property.nearBusStop ?? null,
+      mainRoadAccess: property.mainRoadAccess ?? null,
+    },
     isApiListing: true,
   }
 }

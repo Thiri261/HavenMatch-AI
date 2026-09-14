@@ -1,476 +1,144 @@
-import React, { useState, useEffect } from 'react';
+import { useEffect, useMemo, useState } from 'react'
+
+const emptyForm = {
+  title: '', priceMmk: '', listingType: 'rent', propertyType: 'apartment', township: 'bahan', bedrooms: 2,
+  bathrooms: 1, areaSqft: 500, floor: '', imageUrl: '', availabilityStatus: 'available', reliableElectricity: true,
+  generator: false, reliableWater: true, internetReady: false, airConditioning: false, parking: false,
+  petFriendly: false, nearShops: false, nearBusStop: false, mainRoadAccess: false, security: false, maxOccupants: '',
+}
+
+const input = { width: '100%', padding: '11px 12px', borderRadius: 9, border: '1px solid #ddd', background: '#fff', boxSizing: 'border-box' }
+const label = { display: 'grid', gap: 6, color: '#444', fontSize: 13, fontWeight: 700 }
+const button = { border: 0, borderRadius: 9, padding: '10px 15px', cursor: 'pointer', fontWeight: 700 }
+const words = (value) => String(value || '').replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase())
 
 export default function AdminPage() {
-  const [activeTab, setActiveTab] = useState('listings');
-
-  // Listing Data များ (User ဘက်က Preference တွေနဲ့ ချိန်ကိုက်လို့ရမည့် အချက်အလက် အစုံပါဝင်သည်)
-  const [listings, setListings] = useState([
-    {
-      id: 1,
-      title: 'Modern Condo in Bahan',
-      price: '350000000',
-      propertyType: 'Condo',
-      floor: 'Middle floor',
-      bedrooms: '2 bedrooms',
-      bathrooms: '1 bathroom',
-      minRoomSize: 'Under 500 sq ft',
-      township: 'Bahan',
-      sideOfYangon: 'Central',
-      reliableElectricity: 'Must have',
-      generator: 'Must have',
-      reliableWater: 'Must have',
-      wifi: 'Prefer',
-      aircon: 'Must have',
-      parking: 'Prefer',
-      petsAllowed: 'Yes',
-      nearShops: 'Prefer',
-      areaPreference: 'Quiet residential area',
-      image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=200&q=80'
-    }
-  ]);
-
-  // Form Input States (ပုံတွေထဲက User Preferences တွေနဲ့ တစ်သားတည်းဖြစ်အောင် ထည့်သွင်းထားသည်)
-  const [title, setTitle] = useState('');
-  const [price, setPrice] = useState('');
-  const [propertyType, setPropertyType] = useState('Apartment');
-  const [floor, setFloor] = useState('Ground floor');
-  const [bedrooms, setBedrooms] = useState('2 bedrooms');
-  const [bathrooms, setBathrooms] = useState('1 bathroom');
-  const [minRoomSize, setMinRoomSize] = useState('Under 500 sq ft');
-  const [township, setTownship] = useState('Bahan');
-  const [sideOfYangon, setSideOfYangon] = useState('Central');
-  
-  // Facilities States
-  const [reliableElectricity, setReliableElectricity] = useState('Must have');
-  const [generator, setGenerator] = useState('Prefer');
-  const [reliableWater, setReliableWater] = useState('Must have');
-  const [wifi, setWifi] = useState('Prefer');
-  const [aircon, setAircon] = useState('Prefer');
-  const [parking, setParking] = useState('Doesn\'t matter');
-  const [petsAllowed, setPetsAllowed] = useState('Yes');
-  const [nearShops, setNearShops] = useState('Prefer');
-  const [areaPreference, setAreaPreference] = useState('Quiet residential area');
-
-  const [image, setImage] = useState(null);
-
-  // Registered User Log Data များ
-  const [users, setUsers] = useState([]);
+  const [activeTab, setActiveTab] = useState('listings')
+  const [listings, setListings] = useState([])
+  const [users, setUsers] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [query, setQuery] = useState('')
+  const [typeFilter, setTypeFilter] = useState('all')
+  const [form, setForm] = useState(emptyForm)
+  const [editingId, setEditingId] = useState(null)
+  const [formOpen, setFormOpen] = useState(false)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
-    const savedUsers = JSON.parse(localStorage.getItem('registered_users_log') || '[]');
-    setUsers(savedUsers);
-  }, [activeTab]);
+    fetch('/api/properties').then(async (response) => {
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.message || 'Unable to load listings.')
+      setListings(result.properties || [])
+    }).catch((loadError) => setError(loadError.message)).finally(() => setLoading(false))
+  }, [])
 
-  // Listing အသစ်ထည့်သွင်းသည့် Function
-  const handleAddListing = (e) => {
-    e.preventDefault();
-    if (!title || !price) {
-      alert('ကျေးဇူးပြု၍ Title နှင့် Price ဖြည့်သွင်းပေးပါ။');
-      return;
-    }
+  useEffect(() => {
+    if (activeTab === 'users') setUsers(JSON.parse(localStorage.getItem('registered_users_log') || '[]'))
+  }, [activeTab])
 
-    const newListing = {
-      id: Date.now(),
-      title,
-      price,
-      propertyType,
-      floor,
-      bedrooms,
-      bathrooms,
-      minRoomSize,
-      township,
-      sideOfYangon,
-      reliableElectricity,
-      generator,
-      reliableWater,
-      wifi,
-      aircon,
-      parking,
-      petsAllowed,
-      nearShops,
-      areaPreference,
-      image: image ? URL.createObjectURL(image) : 'https://via.placeholder.com/150'
-    };
+  const filtered = useMemo(() => {
+    const needle = query.trim().toLowerCase()
+    return listings.filter((item) => {
+      const matchesType = typeFilter === 'all' || item.listingType === typeFilter
+      const matchesSearch = !needle || [item.title, item.id, item.township, item.propertyType, item.listingType]
+        .some((value) => String(value || '').toLowerCase().includes(needle))
+      return matchesType && matchesSearch
+    })
+  }, [listings, query, typeFilter])
 
-    setListings([newListing, ...listings]);
-    // Form ကို Reset ပြန်လုပ်ရန်
-    setTitle('');
-    setPrice('');
-    setImage(null);
-  };
+  const typeCounts = useMemo(() => ({
+    all: listings.length,
+    rent: listings.filter((item) => item.listingType === 'rent').length,
+    buy: listings.filter((item) => item.listingType === 'buy').length,
+    land: listings.filter((item) => item.listingType === 'land').length,
+  }), [listings])
 
-  const handleDeleteListing = (id) => {
-    if (confirm('ဤ Listing ကို ဖျက်ရန် သေချာပါသလား။')) {
-      setListings(listings.filter(item => item.id !== id));
-    }
-  };
+  const update = (key, value) => setForm((current) => ({ ...current, [key]: value }))
+  const openNew = () => { setEditingId(null); setForm(emptyForm); setError(''); setFormOpen(true) }
+  const openEdit = (listing) => {
+    setEditingId(listing.id)
+    setForm({ ...emptyForm, ...listing, floor: listing.floor ?? '', imageUrl: listing.imageUrl || '' })
+    setError(''); setFormOpen(true); window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
-  const handleClearUsers = () => {
-    if (confirm('User Activity Logs အားလုံးကို ဖျက်ရန် သေချာပါသလား။')) {
-      localStorage.removeItem('registered_users_log');
-      setUsers([]);
-    }
-  };
+  const saveListing = async (event) => {
+    event.preventDefault(); setSaving(true); setError('')
+    try {
+      const url = editingId ? `/api/properties/${encodeURIComponent(editingId)}` : '/api/properties'
+      const payload = { ...form, priceMmk: Number(form.priceMmk), bedrooms: Number(form.bedrooms), bathrooms: Number(form.bathrooms), areaSqft: Number(form.areaSqft), floor: form.floor === '' ? null : Number(form.floor), maxOccupants: form.maxOccupants === '' ? null : Number(form.maxOccupants), images: form.imageUrl ? [form.imageUrl] : [] }
+      const response = await fetch(url, { method: editingId ? 'PUT' : 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.message || 'Unable to save listing.')
+      setListings((current) => editingId ? current.map((item) => item.id === editingId ? result.property : item) : [result.property, ...current])
+      setFormOpen(false)
+    } catch (saveError) { setError(saveError.message) } finally { setSaving(false) }
+  }
 
-  return (
-    <div style={{ display: 'flex', minHeight: '100vh', backgroundColor: '#fff7f5', fontFamily: 'sans-serif' }}>
-      
-      {/* Sidebar Navigation */}
-      <aside style={{ width: '260px', backgroundColor: '#ffffff', padding: '24px', borderRight: '1px solid #ffe4de', boxShadow: '0 1px 3px rgba(0,0,0,0.02)' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '32px' }}>
-          <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: '#ff5838', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontWeight: 'bold', fontSize: '18px' }}>
-            H
-          </div>
-          <h2 style={{ color: '#1a1a1a', fontSize: '20px', fontWeight: 'bold', margin: 0 }}>
-            HavenMatch <span style={{ color: '#ff5838' }}>Admin</span>
-          </h2>
+  const deleteListing = async (listing) => {
+    if (!window.confirm(`Delete “${listing.title}”? This cannot be undone.`)) return
+    try {
+      const response = await fetch(`/api/properties/${encodeURIComponent(listing.id)}`, { method: 'DELETE' })
+      const result = await response.json()
+      if (!response.ok) throw new Error(result.message || 'Unable to delete listing.')
+      setListings((current) => current.filter((item) => item.id !== listing.id))
+    } catch (deleteError) { setError(deleteError.message) }
+  }
+
+  const toggles = [['reliableElectricity', 'Reliable electricity'], ['generator', 'Generator'], ['reliableWater', 'Reliable water'], ['internetReady', 'Wi-Fi ready'], ['airConditioning', 'Air conditioning'], ['parking', 'Parking'], ['security', 'Security'], ['petFriendly', 'Pets allowed'], ['nearShops', 'Near shops'], ['nearBusStop', 'Near YBS bus stop'], ['mainRoadAccess', 'Main-road access']]
+
+  return <div style={{ display: 'flex', minHeight: '100vh', background: '#fff8f6', fontFamily: 'Inter, Arial, sans-serif' }}>
+    <aside style={{ width: 235, background: '#fff', padding: 24, borderRight: '1px solid #ffe0d8' }}>
+      <h2 style={{ margin: '0 0 30px' }}>HavenMatch <span style={{ color: '#ff5838' }}>Admin</span></h2>
+      <nav style={{ display: 'grid', gap: 9 }}>
+        <button onClick={() => setActiveTab('listings')} style={{ ...button, textAlign: 'left', background: activeTab === 'listings' ? '#ff5838' : 'transparent', color: activeTab === 'listings' ? '#fff' : '#555' }}>Manage Listings</button>
+        <button onClick={() => setActiveTab('users')} style={{ ...button, textAlign: 'left', background: activeTab === 'users' ? '#ff5838' : 'transparent', color: activeTab === 'users' ? '#fff' : '#555' }}>User Activity Logs</button>
+      </nav>
+    </aside>
+    <main style={{ flex: 1, padding: 34, minWidth: 0 }}>
+      {activeTab === 'listings' ? <>
+        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 18, marginBottom: 22 }}>
+          <div><h1 style={{ margin: 0, fontSize: 27 }}>Manage Property Listings</h1><p style={{ margin: '6px 0 0', color: '#777' }}>{listings.length} listings in the shared property data store</p></div>
+          <button onClick={openNew} style={{ ...button, background: '#ff5838', color: '#fff', fontSize: 15 }}>＋ Add New Listing</button>
+        </header>
+        {error && <div role="alert" style={{ padding: 12, borderRadius: 9, background: '#ffe9e5', color: '#a52b18', marginBottom: 16 }}>{error}</div>}
+        <div aria-label="Filter listings by type" style={{ display: 'flex', flexWrap: 'wrap', gap: 9, marginBottom: 16 }}>
+          {[['all', 'All Listings'], ['rent', 'For Rent'], ['buy', 'For Sale'], ['land', 'Land']].map(([value, text]) => <button key={value} type="button" onClick={() => setTypeFilter(value)} style={{ ...button, background: typeFilter === value ? '#253f48' : '#fff', color: typeFilter === value ? '#fff' : '#334', border: typeFilter === value ? '1px solid #253f48' : '1px solid #ddd' }}>{text} ({typeCounts[value]})</button>)}
         </div>
-        
-        <nav style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <button 
-            onClick={() => setActiveTab('listings')}
-            style={{ 
-              backgroundColor: activeTab === 'listings' ? '#ff5838' : 'transparent',
-              color: activeTab === 'listings' ? 'white' : '#555',
-              border: 'none', padding: '12px 16px', borderRadius: '12px', textAlign: 'left', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px'
-            }}
-          >
-            <span>🏠</span> Manage Listings
-          </button>
-          
-          <button 
-            onClick={() => setActiveTab('users')}
-            style={{ 
-              backgroundColor: activeTab === 'users' ? '#ff5838' : 'transparent',
-              color: activeTab === 'users' ? 'white' : '#555',
-              border: 'none', padding: '12px 16px', borderRadius: '12px', textAlign: 'left', fontWeight: '600', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '12px'
-            }}
-          >
-            <span>👥</span> User Activity Logs
-          </button>
-        </nav>
-      </aside>
-
-      {/* Main Content Area */}
-      <main style={{ flex: 1, padding: '36px', maxWidth: '1100px' }}>
-        
-        {/* TAB 1: MANAGE LISTINGS */}
-        {activeTab === 'listings' && (
-          <div>
-            <div style={{ marginBottom: '28px' }}>
-              <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a1a1a', margin: 0 }}>Manage Property Listings (Complete Details)</h1>
-              <p style={{ color: '#666', fontSize: '14px', marginTop: '6px' }}>User ၏ Preference များနှင့် ကိုက်ညီစေရန် အိမ်ခြံမြေအချက်အလက်အပြည့်အစုံ ထည့်သွင်းပါ</p>
+        {formOpen && <section style={{ background: '#fff', border: '1px solid #ffd9d0', borderRadius: 15, padding: 24, marginBottom: 24, boxShadow: '0 8px 28px rgba(80,30,20,.08)' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 20 }}><h2 style={{ margin: 0, fontSize: 20 }}>{editingId ? 'Edit Property Listing' : 'Add New Property Listing'}</h2><button onClick={() => setFormOpen(false)} aria-label="Close form" style={{ ...button, background: '#f5f5f5' }}>✕</button></div>
+          <form onSubmit={saveListing}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(150px, 1fr))', gap: 16 }}>
+              <label style={{ ...label, gridColumn: 'span 2' }}>Title<input required value={form.title} onChange={(e) => update('title', e.target.value)} style={input} /></label>
+              <label style={label}>Price (MMK)<input required min="1" type="number" value={form.priceMmk} onChange={(e) => update('priceMmk', e.target.value)} style={input} /></label>
+              <label style={label}>Listing type<select value={form.listingType} onChange={(e) => update('listingType', e.target.value)} style={input}><option value="rent">Rent</option><option value="buy">Buy</option><option value="land">Land</option></select></label>
+              <label style={label}>Property type<input value={form.propertyType} onChange={(e) => update('propertyType', e.target.value)} style={input} /></label>
+              <label style={label}>Township<input value={form.township} onChange={(e) => update('township', e.target.value.toLowerCase().replaceAll(' ', '_'))} style={input} /></label>
+              <label style={label}>Bedrooms<input min="0" type="number" value={form.bedrooms} onChange={(e) => update('bedrooms', e.target.value)} style={input} /></label>
+              <label style={label}>Bathrooms<input min="0" type="number" value={form.bathrooms} onChange={(e) => update('bathrooms', e.target.value)} style={input} /></label>
+              <label style={label}>Area (sq ft)<input min="1" type="number" value={form.areaSqft} onChange={(e) => update('areaSqft', e.target.value)} style={input} /></label>
+              <label style={label}>Floor<input min="0" type="number" value={form.floor} onChange={(e) => update('floor', e.target.value)} style={input} /></label>
+              <label style={label}>Maximum occupants<input min="1" type="number" value={form.maxOccupants} onChange={(e) => update('maxOccupants', e.target.value)} placeholder="Not specified" style={input} /></label>
+              <label style={label}>Availability<select value={form.availabilityStatus} onChange={(e) => update('availabilityStatus', e.target.value)} style={input}><option value="available">Available</option><option value="unverified">Unverified</option><option value="unavailable">Unavailable</option></select></label>
+              <label style={{ ...label, gridColumn: 'span 2' }}>Property image URL<input value={form.imageUrl} onChange={(e) => update('imageUrl', e.target.value)} placeholder="/images/property.png or https://…" style={input} /></label>
             </div>
-
-            {/* Add New Detailed Listing Card */}
-            <div style={{ backgroundColor: 'white', padding: '28px', borderRadius: '16px', border: '1px solid #ffe4de', marginBottom: '32px', boxShadow: '0 2px 4px rgba(255,88,56,0.02)' }}>
-              <h3 style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', marginBottom: '20px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#ff5838' }}></span>
-                Add New Detailed Property Listing
-              </h3>
-              
-              <form onSubmit={handleAddListing} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                
-                {/* 1. Basic Info */}
-                <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Title</label>
-                    <input 
-                      type="text" 
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                      placeholder="e.g. Luxury Condo in Bahan" 
-                      style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', fontSize: '14px', backgroundColor: '#fafafa' }}
-                    />
-                  </div>
-                  <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Price (MMK)</label>
-                    <input 
-                      type="number" 
-                      value={price}
-                      onChange={(e) => setPrice(e.target.value)}
-                      placeholder="350000000" 
-                      style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', fontSize: '14px', backgroundColor: '#fafafa' }}
-                    />
-                  </div>
-                </div>
-
-                {/* 2. Property Type & Floor & Area Specifications */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Property Type</label>
-                    <select value={propertyType} onChange={(e) => setPropertyType(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="Apartment">Apartment</option>
-                      <option value="Condo">Condo</option>
-                      <option value="House">House</option>
-                      <option value="Shared apartment">Shared apartment</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Floor</label>
-                    <select value={floor} onChange={(e) => setFloor(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="Ground floor">Ground floor</option>
-                      <option value="Middle floor">Middle floor</option>
-                      <option value="High floor">High floor</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Minimum Room Size</label>
-                    <select value={minRoomSize} onChange={(e) => setMinRoomSize(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="Under 500 sq ft">Under 500 sq ft</option>
-                      <option value="500 - 1000 sq ft">500 - 1000 sq ft</option>
-                      <option value="Above 1000 sq ft">Above 1000 sq ft</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* 3. Space & Rooms */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Bedrooms Required</label>
-                    <select value={bedrooms} onChange={(e) => setBedrooms(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="1 bedroom">1 bedroom</option>
-                      <option value="2 bedrooms">2 bedrooms</option>
-                      <option value="3 bedrooms">3 bedrooms</option>
-                      <option value="4+ bedrooms">4+ bedrooms</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Bathrooms Required</label>
-                    <select value={bathrooms} onChange={(e) => setBathrooms(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="1 bathroom">1 bathroom</option>
-                      <option value="2 bathrooms">2 bathrooms</option>
-                      <option value="3+ bathrooms">3+ bathrooms</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* 4. Location & Area Preferences */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Preferred Township</label>
-                    <select value={township} onChange={(e) => setTownship(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="Bahan">Bahan</option>
-                      <option value="Hlaing">Hlaing</option>
-                      <option value="Kamaryut">Kamaryut</option>
-                      <option value="Mayangone">Mayangone</option>
-                      <option value="North Dagon">North Dagon</option>
-                      <option value="South Okkalapa">South Okkalapa</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Side of Yangon</label>
-                    <select value={sideOfYangon} onChange={(e) => setSideOfYangon(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="Central">Central</option>
-                      <option value="North">North</option>
-                      <option value="South">South</option>
-                      <option value="East">East</option>
-                      <option value="West">West</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Area Type</label>
-                    <select value={areaPreference} onChange={(e) => setAreaPreference(e.target.value)} style={{ width: '100%', padding: '12px 14px', borderRadius: '10px', border: '1px solid #e1e1e1', outline: 'none', backgroundColor: '#fafafa', fontSize: '14px' }}>
-                      <option value="Quiet residential area">Quiet residential area</option>
-                      <option value="City centre">City centre</option>
-                      <option value="Suburban area">Suburban area</option>
-                      <option value="Near shops and markets">Near shops and markets</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* 5. Features / Facilities Preferences (Must have / Prefer / Doesn't matter) */}
-                <div style={{ backgroundColor: '#fff8f6', padding: '16px', borderRadius: '12px', border: '1px solid #ffe4de', display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: '12px' }}>
-                <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Reliable Electricity</label>
-                    <select value={reliableElectricity} onChange={(e) => setReliableElectricity(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Generator / Power</label>
-                    <select value={generator} onChange={(e) => setGenerator(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Reliable Water</label>
-                    <select value={reliableWater} onChange={(e) => setReliableWater(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Air Conditioning</label>
-                    <select value={aircon} onChange={(e) => setAircon(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Wi-Fi / Internet</label>
-                    <select value={wifi} onChange={(e) => setWifi(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Parking</label>
-                    <select value={parking} onChange={(e) => setParking(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                    </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Pets Allowed</label>
-                    <select value={petsAllowed} onChange={(e) => setPetsAllowed(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label style={{ display: 'block', fontSize: '12px', fontWeight: '600', color: '#555', marginBottom: '4px' }}>Near Shops/Markets</label>
-                    <select value={nearShops} onChange={(e) => setNearShops(e.target.value)} style={{ width: '100%', padding: '8px', borderRadius: '8px', border: '1px solid #ddd', fontSize: '12px' }}>
-                      <option value="Must have">Must have</option>
-                      <option value="Prefer">Prefer</option>
-                      <option value="Doesn't matter">Doesn't matter</option>
-                    </select>
-                  </div>
-                </div>
-
-                {/* 6. Image Upload */}
-                <div>
-                  <label style={{ display: 'block', fontSize: '13px', fontWeight: '600', color: '#555', marginBottom: '6px' }}>Property Image</label>
-                  <input 
-                    type="file" 
-                    accept="image/*"
-                    onChange={(e) => setImage(e.target.files[0])}
-                    style={{ width: '100%', fontSize: '13px', color: '#666', border: '1px solid #e1e1e1', borderRadius: '10px', padding: '9px', backgroundColor: '#fafafa' }}
-                  />
-                </div>
-
-                <button type="submit" style={{ backgroundColor: '#ff5838', color: 'white', border: 'none', padding: '14px', borderRadius: '10px', fontWeight: 'bold', fontSize: '15px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(255,88,56,0.2)' }}>
-                  Save Complete Listing
-                </button>
-              </form>
-            </div>
-
-            {/* Listings Table */}
-            <div style={{ backgroundColor: 'white', borderRadius: '16px', border: '1px solid #ffe4de', overflow: 'hidden', boxShadow: '0 2px 4px rgba(255,88,56,0.02)' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#fff0ec', color: '#9c2b18', borderBottom: '1px solid #ffe4de', fontSize: '13px' }}>
-                    <th style={{ padding: '16px' }}>Image</th>
-                    <th style={{ padding: '16px' }}>Title & Type</th>
-                    <th style={{ padding: '16px' }}>Location</th>
-                    <th style={{ padding: '16px' }}>Details (Rooms/Floor)</th>
-                    <th style={{ padding: '16px' }}>Price</th>
-                    <th style={{ padding: '16px', textAlign: 'right' }}>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {listings.length === 0 ? (
-                    <tr>
-                      <td colSpan="6" style={{ padding: '32px', textAlign: 'center', color: '#888', fontSize: '14px' }}>
-                        Listing များ မရှိသေးပါ။
-                      </td>
-                    </tr>
-                  ) : (
-                    listings.map((item) => (
-                      <tr key={item.id} style={{ borderBottom: '1px solid #f2f2f2' }}>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ width: '48px', height: '48px', borderRadius: '10px', overflow: 'hidden', backgroundColor: '#eee', border: '1px solid #ddd' }}>
-                          <img src={item.image} alt={item.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                          </div>
-                        </td>
-                        <td style={{ padding: '14px 16px' }}>
-                          <div style={{ fontWeight: '600', color: '#333', fontSize: '14px' }}>{item.title}</div>
-                          <span style={{ backgroundColor: '#fff0ec', color: '#ff5838', padding: '2px 6px', borderRadius: '4px', fontSize: '11px', fontWeight: 'bold' }}>{item.propertyType}</span>
-                        </td>
-                        <td style={{ padding: '14px 16px', color: '#555', fontSize: '13px' }}>{item.township} ({item.sideOfYangon})</td>
-                        <td style={{ padding: '14px 16px', color: '#666', fontSize: '13px' }}>
-                          {item.bedrooms}, {item.bathrooms}<br/>
-                          <span style={{ fontSize: '11px', color: '#888' }}>{item.floor} | Pets: {item.petsAllowed}</span>
-                        </td>
-                        <td style={{ padding: '14px 16px', color: '#ff5838', fontWeight: 'bold', fontSize: '14px' }}>{Number(item.price).toLocaleString()} MMK</td>
-                        <td style={{ padding: '14px 16px', textAlign: 'right' }}>
-                          <button onClick={() => handleDeleteListing(item.id)} style={{ color: '#ff3b30', background: 'none', border: 'none', cursor: 'pointer', fontWeight: '600', fontSize: '13px' }}>
-                            Delete
-                          </button>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 2: USER ACTIVITY LOGS */}
-        {activeTab === 'users' && (
-          <div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
-              <div>
-                <h1 style={{ fontSize: '24px', fontWeight: 'bold', color: '#1a1a1a', margin: 0 }}>👥 Active Users Log</h1>
-                <p style={{ color: '#666', fontSize: '14px', marginTop: '6px' }}>Website ကို ဝင်ရောက်အသုံးပြုထားသော User များ၏ Email စာရင်း</p>
-              </div>
-              <button 
-                onClick={handleClearUsers}
-                style={{ backgroundColor: '#ff3b30', color: 'white', border: 'none', padding: '10px 16px', borderRadius: '10px', cursor: 'pointer', fontWeight: 'bold', fontSize: '13px' }}
-              >
-                Clear History
-              </button>
-            </div>
-
-            <div style={{ backgroundColor: 'white', borderRadius: '16px', border: '1px solid #ffe4de', overflow: 'hidden', boxShadow: '0 2px 4px rgba(255,88,56,0.02)' }}>
-              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
-                <thead>
-                  <tr style={{ backgroundColor: '#fff0ec', color: '#9c2b18', borderBottom: '1px solid #ffe4de', fontSize: '13px' }}>
-                    <th style={{ padding: '16px' }}>User Name</th>
-                    <th style={{ padding: '16px' }}>Email Address</th>
-                    <th style={{ padding: '16px' }}>Last Active Time</th>
-                    <th style={{ padding: '16px', textAlign: 'center' }}>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {users.length === 0 ? (
-                    <tr>
-                      <td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: '#888', fontSize: '14px' }}>
-                        ဝင်ရောက်အသုံးပြုထားသူ (User Logs) မရှိသေးပါ။
-                      </td>
-                    </tr>
-                  ) : (
-                    users.map((u) => (
-                    	<tr key={u.id} style={{ borderBottom: '1px solid #f2f2f2' }}>
-                        <td style={{ padding: '16px', fontWeight: 'bold', color: '#333', fontSize: '14px' }}>{u.name}</td>
-                        <td style={{ padding: '16px', color: '#ff5838', fontWeight: '600', fontSize: '14px' }}>{u.email}</td>
-                        <td style={{ padding: '16px', color: '#666', fontSize: '14px' }}>{u.lastActive}</td>
-                        <td style={{ padding: '16px', textAlign: 'center' }}>
-                          <span style={{ backgroundColor: '#e6f4ea', color: '#137333', padding: '5px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 'bold' }}>
-                            {u.status || 'Active'}
-                          </span>
-                        </td>
-                      </tr>
-                    ))
-                  )}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-      </main>
-    </div>
-  );
+            {form.imageUrl && <img src={form.imageUrl} alt="Property preview" style={{ width: 150, height: 95, objectFit: 'cover', borderRadius: 10, marginTop: 16 }} />}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, background: '#fff8f6', border: '1px solid #ffe0d8', borderRadius: 11, padding: 15, marginTop: 18 }}>{toggles.map(([key, text]) => <label key={key} style={{ display: 'flex', gap: 7, alignItems: 'center', fontSize: 13, fontWeight: 650 }}><input type="checkbox" checked={Boolean(form[key])} onChange={(e) => update(key, e.target.checked)} />{text}</label>)}</div>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 20 }}><button type="button" onClick={() => setFormOpen(false)} style={{ ...button, background: '#eee' }}>Cancel</button><button disabled={saving} style={{ ...button, background: '#ff5838', color: '#fff' }}>{saving ? 'Saving…' : editingId ? 'Save Changes' : 'Save Listing'}</button></div>
+          </form>
+        </section>}
+        <section style={{ background: '#fff', border: '1px solid #ffe0d8', borderRadius: 15, overflow: 'hidden' }}>
+          <div style={{ padding: 16, borderBottom: '1px solid #eee', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 16 }}><input value={query} onChange={(e) => setQuery(e.target.value)} placeholder="Search title, township, type, or property ID" aria-label="Search property listings" style={{ ...input, maxWidth: 430 }} /><strong style={{ color: '#666', fontSize: 13, whiteSpace: 'nowrap' }}>Showing {filtered.length} of {listings.length}</strong></div>
+          <div style={{ overflowX: 'auto' }}><table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}><thead><tr style={{ background: '#fff3f0', color: '#7f2e20' }}>{['Property ID', 'Property', 'Type', 'Location', 'Details', 'Price', 'Status', 'Actions'].map((heading) => <th key={heading} style={{ padding: 14, fontSize: 13 }}>{heading}</th>)}</tr></thead><tbody>
+            {loading ? <tr><td colSpan="8" style={{ padding: 35, textAlign: 'center' }}>Loading listings…</td></tr> : filtered.length === 0 ? <tr><td colSpan="8" style={{ padding: 35, textAlign: 'center' }}>No listings found.</td></tr> : filtered.map((item) => <tr key={item.id} style={{ borderTop: '1px solid #eee' }}>
+              <td style={{ padding: 12, fontFamily: 'monospace', fontSize: 12, color: '#555', whiteSpace: 'nowrap' }}>{item.id}</td>
+              <td style={{ padding: 12, minWidth: 230 }}><div style={{ display: 'flex', alignItems: 'center', gap: 11 }}><img src={item.imageUrl || '/images/two-bedroom.png'} alt="" style={{ width: 64, height: 48, borderRadius: 8, objectFit: 'cover', background: '#eee' }} /><strong style={{ display: 'block', fontSize: 13 }}>{item.title}</strong></div></td>
+              <td style={{ padding: 12, fontSize: 13 }}>{words(item.listingType)} · {words(item.propertyType)}</td><td style={{ padding: 12, fontSize: 13 }}>{words(item.township)}</td><td style={{ padding: 12, fontSize: 13 }}>{item.bedrooms ?? '—'} bd · {item.bathrooms ?? '—'} ba<br/><small>{item.areaSqft ? `${item.areaSqft} sq ft` : 'Area not stated'} · {item.maxOccupants ? `${item.maxOccupants} people` : 'occupancy not stated'}</small></td><td style={{ padding: 12, fontWeight: 750, color: '#d94227', whiteSpace: 'nowrap' }}>{Number(item.priceMmk || 0).toLocaleString()} MMK</td><td style={{ padding: 12, fontSize: 13 }}>{words(item.availabilityStatus || 'available')}</td>
+              <td style={{ padding: 12, whiteSpace: 'nowrap' }}><button onClick={() => openEdit(item)} style={{ ...button, padding: '7px 10px', background: '#fff0ec', color: '#b93620', marginRight: 7 }}>Edit</button><button onClick={() => deleteListing(item)} style={{ ...button, padding: '7px 10px', background: '#f6f6f6', color: '#a33' }}>Delete</button></td>
+            </tr>)}
+          </tbody></table></div>
+        </section>
+      </> : <><header style={{ marginBottom: 22 }}><h1 style={{ margin: 0, fontSize: 27 }}>User Activity Logs</h1><p style={{ color: '#777' }}>Registered user activity stored on this device.</p></header><section style={{ background: '#fff', border: '1px solid #ffe0d8', borderRadius: 15, overflow: 'hidden' }}><table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}><thead><tr style={{ background: '#fff3f0' }}>{['User', 'Email', 'Last active', 'Status'].map((heading) => <th key={heading} style={{ padding: 14 }}>{heading}</th>)}</tr></thead><tbody>{users.length ? users.map((user) => <tr key={user.id} style={{ borderTop: '1px solid #eee' }}><td style={{ padding: 14 }}>{user.name}</td><td style={{ padding: 14 }}>{user.email}</td><td style={{ padding: 14 }}>{user.lastActive}</td><td style={{ padding: 14 }}>{user.status || 'Active'}</td></tr>) : <tr><td colSpan="4" style={{ padding: 35, textAlign: 'center' }}>No user activity has been recorded.</td></tr>}</tbody></table></section></>}
+    </main>
+  </div>
 }

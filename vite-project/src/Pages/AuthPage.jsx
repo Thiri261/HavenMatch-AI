@@ -60,17 +60,6 @@ export default function AuthPage({ mode }) {
   return (
     <section className="auth-page">
       <div className="auth-layout">
-        <div className="auth-story">
-          <p className="auth-eyebrow">A SMARTER PROPERTY SEARCH</p>
-          <h1>Find your way home.</h1>
-          <p>Create an account or log in to save your home findings, preferences and best matches in one place.</p>
-          <div className="auth-benefits">
-            <article><span>♡</span><div><strong>Save your home findings</strong><p>Keep every property you like in one convenient list.</p></div></article>
-            <article><span>⌖</span><div><strong>Remember your preferences</strong><p>Continue with the same budget, township and must-haves.</p></div></article>
-            <article><span>✓</span><div><strong>Return to your best matches</strong><p>Access your AI matches again without starting over.</p></div></article>
-          </div>
-        </div>
-
         <div className="auth-card">
           <h2>{isSignUp ? 'Sign up' : 'Log in'}</h2>
           <p className="auth-intro">

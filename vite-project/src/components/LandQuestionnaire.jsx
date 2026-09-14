@@ -158,12 +158,8 @@ function ChoiceButtons({ label, options, value, onChange }) {
 }
 
 function LocationStep({
-  area,
   commuteTime,
-  importantPlace,
-  setArea,
   setCommuteTime,
-  setImportantPlace,
   setSide,
   setTownship,
   setWalkingTime,
@@ -218,20 +214,12 @@ function LocationStep({
             </select>
             <small>You can choose the closest match.</small>
           </label>
-          <label>
-            <span>Preferred ward or area (optional)</span>
-            <input value={area} onChange={(event) => setArea(event.target.value)} placeholder="Enter a ward or area" />
-          </label>
         </div>
         <ChoiceButtons label="Preferred side of Yangon" options={sides} value={side} onChange={setSide} />
       </section>
 
       <section className="location-card commute-card">
         <h2>Commute preferences</h2>
-        <label className="important-place">
-          <span>Important place</span>
-          <input value={importantPlace} onChange={(event) => setImportantPlace(event.target.value)} placeholder="Workplace, school, university, or another place" />
-        </label>
         <ChoiceButtons label="Maximum commute time" options={commuteOptions} value={commuteTime} onChange={setCommuteTime} />
         <ChoiceButtons label="Walking time to a bus stop" options={walkingOptions} value={walkingTime} onChange={setWalkingTime} />
       </section>
@@ -256,9 +244,7 @@ function LandQuestionnaire() {
   const [downPayment, setDownPayment] = useState(() => localStorage.getItem('havenmatch-land-down-payment') || '')
   const [monthlyPayment, setMonthlyPayment] = useState(() => localStorage.getItem('havenmatch-land-monthly-payment') || '')
   const [township, setTownship] = useState(() => localStorage.getItem('havenmatch-land-township') || '')
-  const [area, setArea] = useState(() => localStorage.getItem('havenmatch-land-area-name') || '')
   const [side, setSide] = useState(() => localStorage.getItem('havenmatch-land-side') || '')
-  const [importantPlace, setImportantPlace] = useState(() => localStorage.getItem('havenmatch-land-important-place') || '')
   const [commuteTime, setCommuteTime] = useState(() => localStorage.getItem('havenmatch-land-commute-time') || '')
   const [walkingTime, setWalkingTime] = useState(() => localStorage.getItem('havenmatch-land-walking-time') || '')
 
@@ -277,12 +263,10 @@ function LandQuestionnaire() {
     localStorage.setItem('havenmatch-land-down-payment', downPayment)
     localStorage.setItem('havenmatch-land-monthly-payment', monthlyPayment)
     localStorage.setItem('havenmatch-land-township', township)
-    localStorage.setItem('havenmatch-land-area-name', area)
     localStorage.setItem('havenmatch-land-side', side)
-    localStorage.setItem('havenmatch-land-important-place', importantPlace)
     localStorage.setItem('havenmatch-land-commute-time', commuteTime)
     localStorage.setItem('havenmatch-land-walking-time', walkingTime)
-  }, [unit, size, anySize, payment, purchaseBudget, downPayment, monthlyPayment, township, area, side, importantPlace, commuteTime, walkingTime])
+  }, [unit, size, anySize, payment, purchaseBudget, downPayment, monthlyPayment, township, side, commuteTime, walkingTime])
 
   const areaComplete = Boolean(size || anySize)
   const budgetComplete = Boolean(payment && purchaseBudget && (payment !== 'loan' || (downPayment && monthlyPayment)))
@@ -319,7 +303,7 @@ function LandQuestionnaire() {
           ) : currentStep === 2 ? (
             <BudgetStep downPayment={downPayment} monthlyPayment={monthlyPayment} payment={payment} purchaseBudget={purchaseBudget} setDownPayment={setDownPayment} setMonthlyPayment={setMonthlyPayment} setPayment={setPayment} setPurchaseBudget={setPurchaseBudget} />
           ) : (
-            <LocationStep area={area} commuteTime={commuteTime} importantPlace={importantPlace} setArea={setArea} setCommuteTime={setCommuteTime} setImportantPlace={setImportantPlace} setSide={setSide} setTownship={setTownship} setWalkingTime={setWalkingTime} side={side} township={township} walkingTime={walkingTime} />
+            <LocationStep commuteTime={commuteTime} setCommuteTime={setCommuteTime} setSide={setSide} setTownship={setTownship} setWalkingTime={setWalkingTime} side={side} township={township} walkingTime={walkingTime} />
           )}
         </main>
       </div>

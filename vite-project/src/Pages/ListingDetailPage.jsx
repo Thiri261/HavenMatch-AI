@@ -82,22 +82,22 @@ export default function ListingDetailPage() {
     const next = current.includes(listing.id) ? current.filter((item) => item !== listing.id) : [...current, listing.id]
     localStorage.setItem(savedKey, JSON.stringify(next)); refreshSavedState((version) => version + 1)
   }
-  const share = async () => {
-    const data = { title: listing.title, text: `${listing.title} on HavenMatch`, url: window.location.href }
-    if (navigator.share) await navigator.share(data)
-    else await navigator.clipboard.writeText(window.location.href)
-  }
-  const backHref = listing.purpose === 'Land' ? '#browse/land' : listing.purpose === 'Buy' ? '#browse/buy' : '#browse/rent'
+  const isLandListing = listing.purpose === 'Land' || /land/i.test(listing.type)
+  const occupancyCapacity = listing.maxOccupants ?? (Number.isFinite(listing.beds) && listing.beds > 0 ? listing.beds * 2 : null)
+  const nearBusStop = listing.commute?.nearBusStop ?? listing.features.some((feature) => /bus|ybs/i.test(feature))
+  const mainRoadAccess = listing.commute?.mainRoadAccess ?? listing.features.some((feature) => /main.?road|road access/i.test(feature))
+  const facilityDetails = listing.features.filter((feature) => !/bus|ybs|main.?road|road access/i.test(feature))
+  const backHref = isLandListing ? '#browse/land' : listing.purpose === 'Buy' ? '#browse/buy' : '#browse/rent'
   const availabilityLabel = listing.isApiListing
     ? `${displayWords(listing.availabilityStatus)} listing`
-    : 'Verified listing'
+    : 'Available listing'
 
   return <div className="listing-page">
     <Header />
     <main className="listing-detail-shell">
       <nav className="listing-topbar" aria-label="Listing actions">
         <a href={backHref}>← <span>Back to search</span></a>
-        <div><button type="button" onClick={toggleSaved}>{saved ? '♥ Saved' : '♡ Save'}</button><button type="button" onClick={share}>↗ Share</button></div>
+        <div><button type="button" onClick={toggleSaved}>{saved ? '♥ Saved' : '♡ Save'}</button></div>
       </nav>
       <section className="listing-gallery" aria-label="Property photos">
         {listing.images.map((image, index) => <img key={`${image}-${index}`} src={image} alt={`${listing.title}, view ${index + 1}`} />)}
@@ -107,12 +107,12 @@ export default function ListingDetailPage() {
         <div className="listing-overview">
           <div className="listing-summary">
             <div><span className="listing-status">● {listing.purpose === 'Rent' ? 'For rent' : 'For sale'}</span><h1>{money.format(listing.price)} MMK {listing.purpose === 'Rent' && <small>/ month</small>}</h1><p>{listing.address}</p></div>
-            <dl>{listing.purpose !== 'Land' && <><div><dt>{listing.beds ?? '—'}</dt><dd>beds</dd></div><div><dt>{listing.baths ?? '—'}</dt><dd>baths</dd></div></>}<div><dt>{listing.sqft === null ? '—' : money.format(listing.sqft)}</dt><dd>sqft</dd></div></dl>
+            <dl>{!isLandListing && <><div><dt>{listing.beds ?? '—'}</dt><dd>beds</dd></div><div><dt>{listing.baths ?? '—'}</dt><dd>baths</dd></div></>}<div><dt>{listing.sqft === null ? '—' : money.format(listing.sqft)}</dt><dd>sqft</dd></div></dl>
           </div>
-          <div className="listing-facts">
-            <span>⌂ {listing.type}</span>{listing.built && <span>◷ Built in {listing.built}</span>}{listing.floor !== null && listing.floor !== undefined && <span>▤ Floor {listing.floor}</span>}<span>▱ {listing.township}</span><span>{listing.isApiListing ? 'ⓘ' : '✓'} {availabilityLabel}</span>
-          </div>
-          <section className="listing-special"><p>PROPERTY DETAILS</p><h2>{listing.title}</h2>{listing.features.length > 0 && <div>{listing.features.map((feature) => <span key={feature}>✓ {feature}</span>)}</div>}{!listing.isApiListing && <p>{listing.description}</p>}</section>
+            <div className="listing-facts">
+              <span>⌂ {listing.type}</span>{listing.built && <span>◷ Built in {listing.built}</span>}{listing.floor !== null && listing.floor !== undefined && <span>▤ Floor {listing.floor}</span>}<span>▱ {listing.township}</span><span>{listing.isApiListing ? 'ⓘ' : '✓'} {availabilityLabel}</span>
+            </div>
+          <section className="listing-special"><p>PROPERTY DETAILS</p><h2>{listing.title}</h2><ul className="listing-detail-list">{!isLandListing && <><li><strong>Occupancy</strong><span>{occupancyCapacity ? `Up to ${occupancyCapacity} people` : 'Not specified'}</span></li><li><strong>YBS access</strong><span>{nearBusStop === true ? 'Near a YBS bus stop' : 'Not specified'}</span></li><li><strong>Road access</strong><span>{mainRoadAccess === true ? 'Near a main road' : 'Not specified'}</span></li></>}{facilityDetails.map((feature) => <li key={feature}><strong>Facility</strong><span>{feature}</span></li>)}</ul>{!listing.isApiListing && <p>{listing.description}</p>}</section>
         </div>
         <aside className="listing-contact-card">
           <p>Interested in this property?</p><h2>Arrange a viewing</h2><button className="request-tour-button" type="button" onClick={requestTour} disabled={loading}>{contacted ? 'Email prepared ✓' : 'Request a tour'}</button><button className="contact-agent-button" type="button" onClick={revealContact} disabled={loading}>{showContact ? 'Hide agent details' : 'Contact agent'}</button>{showContact && <address className="agent-contact-details"><strong>{agent.name}</strong><a href={`tel:${agent.phone.replace(/\s/g, '')}`}>{agent.phone}</a><a href={`mailto:${agent.email}`}>{agent.email}</a><span>{agent.address}</span></address>}<small>{contacted ? 'Your email app has opened with the tour request ready to send.' : session ? 'Signed in—agent actions are available.' : 'Log in to request a tour or view agent details.'}</small>

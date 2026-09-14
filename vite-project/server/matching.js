@@ -1,6 +1,6 @@
 /* global process */
 
-import { readFile } from 'node:fs/promises'
+import { readFile, writeFile } from 'node:fs/promises'
 import { spawn } from 'node:child_process'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -15,6 +15,10 @@ export { calculateMatch, enrichMatch, isPropertyEligibleForIntent, MatchValidati
 
 export async function getProperties() {
   return JSON.parse(await readFile(propertiesPath, 'utf8'))
+}
+
+export async function saveProperties(properties) {
+  await writeFile(propertiesPath, `${JSON.stringify(properties, null, 2)}\n`, 'utf8')
 }
 
 export function runProlog(request, properties) {

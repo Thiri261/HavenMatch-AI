@@ -27,6 +27,7 @@ property_matches(Property, Request, Score, ScoreStatus, MatchedWeight, SelectedW
     strict_minimum(Property, Request, bedrooms, enough_bedrooms),
     known_minimum(Property, Request, bathrooms, enough_bathrooms),
     known_property_minimum(Property, Request, areaSqft, minimumAreaSqft, sufficient_area),
+    optional_capacity(Property, Request),
     all_must_have_facilities_allowed(Property, Request),
     reasons(Property, Request, Reasons),
     matched_weight(Property, Request, MatchedWeight),
@@ -94,6 +95,19 @@ enough_bedrooms(Actual, Required) :- Actual >= Required.
 enough_bathrooms(Actual, Required) :- Actual >= Required.
 sufficient_area(Actual, Required) :- Actual >= Required.
 
+property_capacity(Property, Capacity) :-
+    ( get_dict(maxOccupants, Property, Stated), number(Stated)
+    -> Capacity = Stated
+    ; get_dict(bedrooms, Property, Bedrooms), number(Bedrooms), Bedrooms > 0,
+      Capacity is Bedrooms * 2
+    ).
+
+optional_capacity(Property, Request) :-
+    ( get_dict(people, Request, Required), number(Required)
+    -> ( property_capacity(Property, Capacity) -> Capacity >= Required ; true )
+    ; true
+    ).
+
 facility_spec(reliable_electricity, reliableElectricity, reliable_electricity_available).
 facility_spec(generator, generator, backup_power_available).
 facility_spec(reliable_water, reliableWater, reliable_water_available).
@@ -142,6 +156,9 @@ reason(Property, Request, enough_bathrooms) :-
 reason(Property, Request, sufficient_area) :-
     get_dict(minimumAreaSqft, Request, Required), number(Required),
     get_dict(areaSqft, Property, Actual), number(Actual), Actual >= Required.
+reason(Property, Request, enough_capacity) :-
+    get_dict(people, Request, Required), number(Required),
+    property_capacity(Property, Capacity), Capacity >= Required.
 reason(Property, Request, Reason) :-
     facility_spec(RequestKey, PropertyKey, Reason),
     facility_priority(Request, RequestKey, Priority),
@@ -169,6 +186,8 @@ selected_points(Request, 5) :-
     get_dict(bathrooms, Request, Value), number(Value).
 selected_points(Request, 5) :-
     get_dict(minimumAreaSqft, Request, Value), number(Value).
+selected_points(Request, 5) :-
+    get_dict(people, Request, Value), number(Value).
 selected_points(Request, 3) :-
     facility_spec(RequestKey, _, _),
     facility_priority(Request, RequestKey, "must_have").
@@ -182,6 +201,7 @@ points(Property, Request, 10) :- reason(Property, Request, preferred_property_ty
 points(Property, Request, 20) :- reason(Property, Request, enough_bedrooms).
 points(Property, Request, 5) :- reason(Property, Request, enough_bathrooms).
 points(Property, Request, 5) :- reason(Property, Request, sufficient_area).
+points(Property, Request, 5) :- reason(Property, Request, enough_capacity).
 points(Property, Request, 3) :-
     facility_spec(RequestKey, PropertyKey, _),
     facility_priority(Request, RequestKey, "must_have"),

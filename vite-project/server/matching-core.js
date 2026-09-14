@@ -40,6 +40,7 @@ const REASON_TEXT = {
   enough_bedrooms: 'It provides the required number of bedrooms.',
   enough_bathrooms: 'It provides the required number of bathrooms.',
   sufficient_area: 'Its listed area meets your minimum size requirement.',
+  enough_capacity: 'Its estimated occupancy capacity fits your household.',
   reliable_electricity_available: 'The listing confirms reliable electricity.',
   backup_power_available: 'The listing confirms generator or backup power.',
   reliable_water_available: 'The listing confirms a reliable water supply.',
@@ -63,6 +64,7 @@ const REASON_BY_FACILITY = {
 const PROPERTY_FIELD_BY_REASON = {
   within_budget: 'priceMmk', preferred_township: 'township', preferred_property_type: 'propertyType',
   enough_bedrooms: 'bedrooms', enough_bathrooms: 'bathrooms', sufficient_area: 'areaSqft',
+  enough_capacity: 'maxOccupants',
   ...Object.fromEntries(FACILITY_RULES.map(([requestKey, propertyKey]) => [REASON_BY_FACILITY[requestKey], propertyKey])),
 }
 
@@ -73,6 +75,7 @@ const FAILED_REQUIREMENT_TEXT = {
   not_enough_bedrooms: 'Has fewer bedrooms than requested.',
   not_enough_bathrooms: 'Has fewer bathrooms than requested.',
   area_too_small: 'Listed area is below your minimum size.',
+  not_enough_capacity: 'Estimated occupancy is below your household size.',
 }
 
 export class MatchValidationError extends Error {
@@ -141,6 +144,7 @@ export function normalizeRequest(input = {}) {
     bedrooms: numberOrNull(input.bedrooms ?? input.beds),
     bathrooms: numberOrNull(input.bathrooms),
     minimumAreaSqft: numberOrNull(input.minimumAreaSqft ?? input.areaSqft),
+    people: numberOrNull(input.people),
     pets,
     facilities,
   }
@@ -158,6 +162,7 @@ export function validateMatchRequest(input, request = normalizeRequest(input)) {
     ['Bedrooms', input.bedrooms ?? input.beds, request.bedrooms],
     ['Bathrooms', input.bathrooms, request.bathrooms],
     ['Minimum area', input.minimumAreaSqft ?? input.areaSqft, request.minimumAreaSqft],
+    ['Number of people', input.people, request.people],
   ]
   for (const [label, raw, normalized] of numericFields) {
     if (supplied(raw) && normalized === null) throw new MatchValidationError(`${label} must be a number.`)
@@ -188,6 +193,7 @@ export function calculateSelectedWeight(request) {
   if (request.bedrooms !== null) weight += 20
   if (request.bathrooms !== null) weight += 5
   if (request.minimumAreaSqft !== null) weight += 5
+  if (request.people !== null) weight += 5
   for (const [requestKey] of FACILITY_RULES) {
     if (mustHave(request.facilities, requestKey)) weight += 3
     else if (preferred(request.facilities, requestKey)) weight += 2
@@ -221,6 +227,13 @@ export function calculateMatch(property, request) {
     if (property.areaSqft < request.minimumAreaSqft) failedRequirements.push('area_too_small')
     else add(5, 'sufficient_area')
   }
+  if (request.people !== null) {
+    const capacity = Number.isFinite(property.maxOccupants)
+      ? property.maxOccupants
+      : Number.isFinite(property.bedrooms) && property.bedrooms > 0 ? property.bedrooms * 2 : null
+    if (capacity !== null && capacity < request.people) failedRequirements.push('not_enough_capacity')
+    else if (capacity !== null) add(5, 'enough_capacity')
+  }
 
   for (const [requestKey, propertyKey] of FACILITY_RULES) {
     if (!preferred(request.facilities, requestKey)) continue
@@ -253,6 +266,9 @@ function buildWarnings(property, request) {
     if (preferred(request.facilities, requestKey) && (property[propertyKey] === null || property[propertyKey] === undefined)) {
       add(`${requestKey}_information_unavailable`, `The listing does not confirm ${label}; verify it with the agent.`)
     }
+  }
+  if (request.people !== null && !Number.isFinite(property.maxOccupants) && !Number.isFinite(property.bedrooms)) {
+    add('occupancy_information_unavailable', 'The listing does not state an occupancy capacity; verify it with the agent.')
   }
   const syntheticFields = new Set(Array.isArray(property.syntheticFields) ? property.syntheticFields : [])
   const selectedSyntheticFields = []

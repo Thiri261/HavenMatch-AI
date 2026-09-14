@@ -108,6 +108,19 @@ test('returns readable explanations and transparent unknown-data warnings', () =
   assert.ok(result.warnings.some((item) => item.code === 'security_information_unavailable'))
 })
 
+test('matches household size against stated or bedroom-derived occupancy', () => {
+  const request = normalizeRequest({ intent: 'rent', people: 4 })
+  const stated = calculateMatch({ ...property, maxOccupants: 4 }, request)
+  assert.ok(stated.reasons.includes('enough_capacity'))
+  assert.equal(stated.score, 100)
+
+  const tooSmall = calculateMatch({ ...property, maxOccupants: 3 }, request)
+  assert.ok(tooSmall.failedRequirements.includes('not_enough_capacity'))
+
+  const bedroomDerived = calculateMatch({ ...property, maxOccupants: null, bedrooms: 2 }, request)
+  assert.ok(bedroomDerived.reasons.includes('enough_capacity'))
+})
+
 test('labels synthetic demo fields in explanations and warnings', () => {
   const request = normalizeRequest({ intent: 'rent', bedrooms: 2, facilities: { parking: 'prefer' } })
   const syntheticProperty = { ...property, syntheticFields: ['bedrooms', 'parking'], hasSyntheticDemoData: true }

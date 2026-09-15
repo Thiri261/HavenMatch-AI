@@ -9,6 +9,10 @@ export default function AuthPage({ mode }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [role, setRole] = useState('user')
+  const [contactPhone, setContactPhone] = useState('')
+  const [contactEmail, setContactEmail] = useState('')
+  const [contactLocation, setContactLocation] = useState('')
   const [message, setMessage] = useState(() => localStorage.getItem('havenmatch_auth_message') || '')
   const [submitting, setSubmitting] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
@@ -22,12 +26,20 @@ export default function AuthPage({ mode }) {
       setMessage('Enter a valid email address.')
       return
     }
-    if (!strongPassword.test(password)) {
+    if (isSignUp && !strongPassword.test(password)) {
       setMessage('Password must have at least 8 characters, including an uppercase letter, a number, and a special character.')
+      return
+    }
+    if (!isSignUp && !password) {
+      setMessage('Enter your password.')
       return
     }
     if (isSignUp && (!name.trim() || password !== confirmPassword)) {
       setMessage(!name.trim() ? 'Please enter your name.' : 'Passwords do not match.')
+      return
+    }
+    if (isSignUp && role === 'business' && (!contactPhone.trim() || !contactEmail.trim() || !contactLocation.trim())) {
+      setMessage('Vendors must add their contact phone, email, and location at signup so the admin can approve them.')
       return
     }
 
@@ -37,7 +49,7 @@ export default function AuthPage({ mode }) {
         method: 'POST',
         credentials: 'include',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: name.trim(), email: normalizedEmail, password }),
+        body: JSON.stringify({ name: name.trim(), email: normalizedEmail, password, role, phone: contactPhone.trim(), contactEmail: contactEmail.trim().toLowerCase(), location: contactLocation.trim() }),
       })
       const raw = await response.text()
       let data = null
@@ -46,11 +58,23 @@ export default function AuthPage({ mode }) {
       }
       if (!response.ok) throw new Error(data?.message || 'The login service is unavailable. Please try again shortly.')
       if (!data?.user) throw new Error('The login service returned an invalid response. Please try again shortly.')
+      if (isSignUp) {
+        localStorage.setItem('havenmatch_auth_message', data.message || 'Account created. Log in to continue.')
+        window.location.assign('#signin')
+        return
+      }
+      if (data.user && (data.user.status === 'pending' || data.user.status === 'rejected')) {
+        setMessage(data.user.status === 'pending'
+          ? 'Your vendor account is awaiting admin approval. Please try again later.'
+          : 'Your vendor account was not approved. Contact an administrator.')
+        setSubmitting(false)
+        return
+      }
       localStorage.removeItem('havenmatch_auth_message')
       announceAuthChange(data.user)
       const redirect = localStorage.getItem('havenmatch_auth_redirect')
       localStorage.removeItem('havenmatch_auth_redirect')
-      window.location.assign(redirect?.startsWith('#') ? redirect : '#dashboard')
+      window.location.assign(redirect?.startsWith('#') ? redirect : data.user.role === 'admin' ? '#admin' : data.user.role === 'business' ? '#business' : '#dashboard')
     } catch (error) {
       setMessage(error instanceof TypeError ? 'Unable to connect to the login service. Please try again shortly.' : error.message)
       setSubmitting(false)
@@ -60,17 +84,6 @@ export default function AuthPage({ mode }) {
   return (
     <section className="auth-page">
       <div className="auth-layout">
-        <div className="auth-story">
-          <p className="auth-eyebrow">A SMARTER PROPERTY SEARCH</p>
-          <h1>Find your way home.</h1>
-          <p>Create an account or log in to save your home findings, preferences and best matches in one place.</p>
-          <div className="auth-benefits">
-            <article><span>♡</span><div><strong>Save your home findings</strong><p>Keep every property you like in one convenient list.</p></div></article>
-            <article><span>⌖</span><div><strong>Remember your preferences</strong><p>Continue with the same budget, township and must-haves.</p></div></article>
-            <article><span>✓</span><div><strong>Return to your best matches</strong><p>Access your AI matches again without starting over.</p></div></article>
-          </div>
-        </div>
-
         <div className="auth-card">
           <h2>{isSignUp ? 'Sign up' : 'Log in'}</h2>
           <p className="auth-intro">
@@ -79,10 +92,25 @@ export default function AuthPage({ mode }) {
 
           <form className="auth-form" onSubmit={handleSubmit}>
           {isSignUp && (
+            <>
             <label>
               Full name
               <input value={name} onChange={(event) => setName(event.target.value)} autoComplete="name" required />
             </label>
+            <fieldset className="auth-role">
+              <legend>Account type</legend>
+              <label><input type="radio" name="role" value="user" checked={role === 'user'} onChange={() => setRole('user')} /> Purchaser <span>Browse and match homes.</span></label>
+              <label><input type="radio" name="role" value="business" checked={role === 'business'} onChange={() => setRole('business')} /> Vendor <span>Post housing listings for review.</span></label>
+            </fieldset>
+            {role === 'business' && (
+              <fieldset className="auth-role auth-contact-fieldset">
+                <legend>Your contact details (for admin approval)</legend>
+                <label>Contact phone<input type="tel" placeholder="+95 9 123 456 789" value={contactPhone} onChange={(event) => setContactPhone(event.target.value)} required /></label>
+                <label>Contact email<input type="email" placeholder="agent@example.com" value={contactEmail} onChange={(event) => setContactEmail(event.target.value)} required /></label>
+                <label>Office / meeting location<input placeholder="No. 5, Pyay Road, Yangon" value={contactLocation} onChange={(event) => setContactLocation(event.target.value)} required /></label>
+              </fieldset>
+            )}
+            </>
           )}
           <label>
             Email address
@@ -91,7 +119,7 @@ export default function AuthPage({ mode }) {
           <label>
             Password
             <div className="password-field">
-              <input type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignUp ? 'new-password' : 'current-password'} minLength="8" maxLength="128" required />
+              <input type={showPassword ? 'text' : 'password'} placeholder="Enter your password" value={password} onChange={(event) => setPassword(event.target.value)} autoComplete={isSignUp ? 'new-password' : 'current-password'} minLength={isSignUp ? 8 : 1} maxLength="128" required />
               <button type="button" onClick={() => setShowPassword((visible) => !visible)} aria-label={showPassword ? 'Hide password' : 'Show password'}>{showPassword ? 'Hide' : 'Show'}</button>
             </div>
             {isSignUp && <small className="password-requirements">Use 8+ characters with an uppercase letter, number, and special character.</small>}
